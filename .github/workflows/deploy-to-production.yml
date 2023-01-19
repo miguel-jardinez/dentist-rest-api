@@ -20,7 +20,7 @@ jobs:
           node-version: 18
           
       - name: Install dependencies
-        run: yarn --production
+        run: yarn
         
       - name: Test and coverage
         run: yarn test:cov
