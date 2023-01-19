@@ -18,8 +18,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     const user = this.user.create(createUserDto);
     try {
-      const userCreated = await this.user.save<UserEntity>(user);
-      return userCreated;
+      return await this.user.save<UserEntity>(user);
     } catch (e) {
       this.errorService.errorHandling(e.code, user.email);
     }
@@ -31,8 +30,7 @@ export class UsersService {
 
   async findOne(id: string): Promise<UserEntity> {
     try {
-      const user = await this.user.findOneOrFail({ where: { id } });
-      return user;
+      return await this.user.findOneOrFail({ where: { id } });
     } catch (e) {
       this.errorService.errorHandling('u-404', e.message);
     }
