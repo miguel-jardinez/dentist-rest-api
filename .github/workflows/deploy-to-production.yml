@@ -1,0 +1,51 @@
+name: deploy-to-production
+
+on:
+  push:
+    branches:
+      - master
+      
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          
+      - name: Install dependencies
+        run: yarn --production
+        
+      - name: Test and coverage
+        run: yarn test:cov
+        
+        
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+      - name: Vercel Action
+        uses: amondnet/vercel-action@v20.0.0
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          github-comment: false
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-args: '--prod'
+            
