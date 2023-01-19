@@ -7,14 +7,11 @@ export class PostgresDbConfigService implements TypeOrmOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
 
   createTypeOrmOptions(): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions {
-    const dbName = this.configService.get<string>('POSTGRES_DATABASE');
-    const username = this.configService.get<string>('POSTGRES_USER');
-    const password = this.configService.get<string>('POSTGRES_PASSWORD');
-    const host = this.configService.get<string>('POSTGRES_HOST') ?? 'localhost';
+    const dbURL = this.configService.get<string>('POSTGRES_URL');
 
     return {
       type: 'postgres',
-      url: `postgresql://${username}:${password}@${host}/${dbName}`,
+      url: dbURL,
       synchronize: true,
       entities: [`${__dirname}/../**/*.entity.{ts,js}`],
     };
