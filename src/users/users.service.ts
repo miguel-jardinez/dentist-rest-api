@@ -5,9 +5,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { ErrorService } from '../utils/ErrorService';
+import { UserServiceInterface } from './interfaces/UserService.interface';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements UserServiceInterface {
   constructor(
     private readonly configService: ConfigService,
     private readonly errorService: ErrorService,
@@ -20,18 +21,23 @@ export class UsersService {
     try {
       return await this.user.save<UserEntity>(user);
     } catch (e) {
+      console.log(e);
       this.errorService.errorHandling(e.code, user.email);
     }
   }
 
   findAll(): Promise<UserEntity[]> {
-    return this.user.find({});
+    return this.user.find({ relations: { profile: true } });
   }
 
-  async findOne(id: string): Promise<UserEntity> {
+  async findById(id: string): Promise<UserEntity> {
     try {
-      return await this.user.findOneOrFail({ where: { id } });
+      return await this.user.findOneOrFail({
+        where: { id },
+        relations: { profile: true },
+      });
     } catch (e) {
+      console.log(e);
       this.errorService.errorHandling('u-404', e.message);
     }
   }
@@ -44,7 +50,16 @@ export class UsersService {
       }
       return this.errorService.errorHandling('u-404', id);
     } catch (e) {
+      console.log(e);
       this.errorService.errorHandling(e.status.toString(), e.response);
+    }
+  }
+
+  public async findByEmail(email: string): Promise<UserEntity> {
+    try {
+      return await this.user.findOne({ where: { email } });
+    } catch (e) {
+      this.errorService.errorHandling(e.status.string(), e.response);
     }
   }
 }
