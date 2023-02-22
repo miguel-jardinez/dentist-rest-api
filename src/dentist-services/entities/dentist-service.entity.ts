@@ -25,7 +25,10 @@ export class DentistServiceEntity {
   })
   amount: AmountEntityEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.services)
   @JoinColumn({ name: 'userid' })
+  @ManyToOne(() => UserEntity, (user) => user.services, {
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
   user: UserEntity;
 }
