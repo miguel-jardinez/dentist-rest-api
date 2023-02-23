@@ -1,0 +1,62 @@
+name: deploy-to-production
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test_lint:
+    name: Type Check And Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: 19.x
+
+      - name: install dependencies
+        run: yarn install
+
+      - name: Type check
+        run: yarn type-check
+
+      - name: linting
+        run: yarn lint
+
+  test_code:
+    needs: test_lint
+    name: Testing CI and coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: 19.x
+
+      - name: install dependencies
+        run: yarn install
+
+      - name: test:ci
+        run: yarn test:ci
+
+      - name: Get Code coverage
+        run: yarn test:cov
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/clover.xml
+          fail_ci_if_error: true
+          verbose: true
