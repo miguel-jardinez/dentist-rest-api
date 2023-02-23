@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
-type ErrorCodes = '23505' | 'u-404' | '404';
+type ErrorCodes = '23505' | 'u-404' | '404' | '401';
 
 @Injectable()
 export class ErrorService {
@@ -14,6 +14,9 @@ export class ErrorService {
       case '404':
         message = `user ${details} do not exists`;
         throw new HttpException(message, HttpStatus.NOT_FOUND);
+
+      case '401':
+        throw new HttpException(details, HttpStatus.UNAUTHORIZED);
 
       case '23505':
         message = `Email ${details} already exists`;

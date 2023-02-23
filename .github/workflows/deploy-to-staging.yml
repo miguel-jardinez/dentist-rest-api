@@ -1,0 +1,105 @@
+name: deploy-to-staging
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  test_lint:
+    name: Type Check And Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: 19.x
+
+      - name: install dependencies
+        run: yarn install
+
+      - name: Type check
+        run: yarn type-check
+
+      - name: linting
+        run: yarn lint
+
+  test_code:
+    needs: test_lint
+    name: Testing CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: 19.x
+
+      - name: install dependencies
+        run: yarn install
+
+      - name: test:ci
+        run: yarn test:ci
+
+  code_coverage:
+    name: Test Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: 19.x
+
+      - name: install dependencies
+        run: yarn install
+
+      - name: Get Code coverage
+        run: yarn test:cov
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/clover.xml
+          fail_ci_if_error: true
+          verbose: true
+
+  deploy_to_staging:
+    needs: test_lint
+    name: Deploy to staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: 19.x
+
+      - name: install dependencies
+        run: yarn install --production
+
+      - name: Install Railway
+        run: npm i -g @railway/cli
+
+      - name: Deploy
+        run: railway up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.DEPLOY_STAGING_GITHUB }}

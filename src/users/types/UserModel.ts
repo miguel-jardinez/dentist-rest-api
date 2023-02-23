@@ -1,3 +1,5 @@
+import { UserRole } from '../../utils/RoleEnum';
+
 export interface UserModel {
   id?: string;
 
@@ -6,4 +8,6 @@ export interface UserModel {
   email: string;
 
   password: string;
+
+  role: UserRole;
 }
