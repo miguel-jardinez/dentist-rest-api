@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           cache: npm
-          node-version: 19.x
+          node-version: 16.x
 
       - name: install dependencies
         run: yarn install
@@ -42,7 +42,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           cache: npm
-          node-version: 19.x
+          node-version: 16.x
 
       - name: install dependencies
         run: yarn install
@@ -63,7 +63,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           cache: npm
-          node-version: 19.x
+          node-version: 16.x
 
       - name: install dependencies
         run: yarn install
@@ -92,7 +92,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           cache: npm
-          node-version: 19.x
+          node-version: 16.x
 
       - name: install dependencies
         run: yarn install
