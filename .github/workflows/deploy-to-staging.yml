@@ -94,7 +94,7 @@ jobs:
           node-version: 19.x
 
       - name: install dependencies
-        run: yarn install --production
+        run: yarn install
 
       - name: Install Railway
         run: npm i -g @railway/cli

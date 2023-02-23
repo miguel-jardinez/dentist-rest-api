@@ -95,7 +95,7 @@ jobs:
           node-version: 19.x
 
       - name: install dependencies
-        run: yarn install --production --frozen-lockfile
+        run: yarn install --frozen-lockfile
 
       - name: Install Railway
         run: npm i -g @railway/cli
