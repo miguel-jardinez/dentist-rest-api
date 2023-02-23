@@ -50,7 +50,7 @@ export class UserEntity implements UserModel {
   services: DentistServiceEntity[];
 
   @BeforeInsert()
-  async hashPassword() {
+  async hashPassword?() {
     this.password = await hash(this.password);
   }
 }
