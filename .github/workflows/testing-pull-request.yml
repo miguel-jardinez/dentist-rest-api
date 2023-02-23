@@ -3,6 +3,7 @@ name: testing-pull-request
 on:
   pull_request:
     branches:
+      - develop
       - master
 
 jobs:
