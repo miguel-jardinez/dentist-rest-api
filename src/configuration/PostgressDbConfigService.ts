@@ -7,7 +7,7 @@ export class PostgresDbConfigService implements TypeOrmOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
 
   createTypeOrmOptions(): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions {
-    const dbURL = this.configService.get<string>('POSTGRES_URL');
+    const dbURL = this.configService.get<string>('DATABASE_URL');
 
     return {
       type: 'postgres',

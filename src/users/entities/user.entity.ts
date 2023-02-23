@@ -44,7 +44,9 @@ export class UserEntity implements UserModel {
   @Column({ enum: UserRole, default: UserRole.PATIENT })
   role: UserRole;
 
-  @OneToMany(() => DentistServiceEntity, (service) => service.user)
+  @OneToMany(() => DentistServiceEntity, (service) => service.user, {
+    cascade: ['remove'],
+  })
   services: DentistServiceEntity[];
 
   @BeforeInsert()

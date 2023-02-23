@@ -9,6 +9,7 @@ import { ErrorService } from '../utils/ErrorService';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProfileService } from '../profile/profile.service';
+import { DirectionsTypesResponse } from './types/directionTypes';
 
 export type DirectionsTypes =
   | 'driving-traffic'
@@ -151,7 +152,9 @@ export class AddressesService {
     const mapBoxToken = this.configService.get<string>('MAP_BOX_TOKEN');
 
     const url = new URL(
-      `${mapBoxUrl}/directions/v5/mapbox/${service}/${coordinatesDirections}`,
+      `${mapBoxUrl}/directions/v5/mapbox/${service}/${encodeURIComponent(
+        coordinatesDirections,
+      )}`,
     );
     url.searchParams.append('alternatives', 'true');
     url.searchParams.append('continue_straight', 'true');
@@ -161,7 +164,11 @@ export class AddressesService {
     url.searchParams.append('steps', 'true');
     url.searchParams.append('access_token', mapBoxToken);
 
-    console.log({ url });
+    const data = await this.httpService.axiosRef.get<DirectionsTypesResponse>(
+      url.toString(),
+    );
+
+    return data.data;
   }
 
   private async updateAddress(
