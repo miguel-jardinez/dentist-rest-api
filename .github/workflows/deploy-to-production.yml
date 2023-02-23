@@ -81,7 +81,7 @@ jobs:
 
   deploy_to_staging:
     needs: code_coverage
-    name: Deploy to staging
+    name: Deploy to production
     runs-on: ubuntu-latest
 
     steps:
@@ -103,4 +103,4 @@ jobs:
       - name: Deploy
         run: railway up
         env:
-          RAILWAY_TOKEN: ${{ secrets.DEPLOY_STAGING_GITHUB }}
+          RAILWAY_TOKEN: ${{ secrets.PRODUCTION_DEPLOY_GITHUB }}
