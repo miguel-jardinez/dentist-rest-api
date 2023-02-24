@@ -3,7 +3,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -13,7 +12,6 @@ import { hash } from 'argon2';
 import { Exclude } from 'class-transformer';
 import { ProfileEntity } from '../../profile/entities/profile.entity';
 import { UserRole } from '../../utils/RoleEnum';
-import { DentistServiceEntity } from '../../dentist-services/entities/dentist-service.entity';
 
 @Entity('user')
 export class UserEntity implements UserModel {
@@ -30,24 +28,22 @@ export class UserEntity implements UserModel {
   @Column({ type: 'text' })
   username: string;
 
-  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-  createDateTime: Date;
-
-  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-  lastChangedDateTime: Date;
-
   @OneToOne(() => ProfileEntity, (profile) => profile.user, {
     cascade: ['remove'],
   })
   profile: ProfileEntity;
 
+  @Column('boolean')
+  is_active: boolean;
+
   @Column({ enum: UserRole, default: UserRole.PATIENT })
   role: UserRole;
 
-  @OneToMany(() => DentistServiceEntity, (service) => service.user, {
-    cascade: ['remove'],
-  })
-  services: DentistServiceEntity[];
+  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  create_date_time: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  last_changed_date_time: Date;
 
   @BeforeInsert()
   async hashPassword?() {

@@ -7,6 +7,7 @@ import { ProfileModule } from './profile/profile.module';
 import { AuthModule } from './auth/auth.module';
 import { DentistServicesModule } from './dentist-services/dentist-services.module';
 import { AddressesModule } from './addresses/addresses.module';
+import { PatientFormModule } from './patient-form/patient-form.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AddressesModule } from './addresses/addresses.module';
     AuthModule,
     DentistServicesModule,
     AddressesModule,
+    PatientFormModule,
   ],
   controllers: [],
   providers: [],

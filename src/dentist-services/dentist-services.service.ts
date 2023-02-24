@@ -49,7 +49,7 @@ export class DentistServicesService {
   async findAll(id: string): Promise<DentistServiceEntity[]> {
     try {
       return await this.serviceRepository.find({
-        where: { user: { id } },
+        where: { profile: { user: { id } } },
         relations: { amount: true },
       });
     } catch (e) {
@@ -80,7 +80,7 @@ export class DentistServicesService {
       };
 
       await this.serviceRepository.update(
-        { id: serviceId, user: { id: userId } },
+        { id: serviceId, profile: { user: { id: userId } } },
         dataService,
       );
 
@@ -100,7 +100,7 @@ export class DentistServicesService {
     try {
       const deleted = await this.serviceRepository.delete({
         id: serviceId,
-        user: { id: userId },
+        profile: { user: { id: userId } },
       });
 
       if (deleted.affected === 0) {
