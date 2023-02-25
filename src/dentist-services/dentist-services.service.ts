@@ -46,10 +46,10 @@ export class DentistServicesService {
     }
   }
 
-  async findAll(id: string): Promise<DentistServiceEntity[]> {
+  async findAll(id: string, listed: boolean): Promise<DentistServiceEntity[]> {
     try {
       return await this.serviceRepository.find({
-        where: { profile: { user: { id } } },
+        where: { is_visible: listed, profile: { user: { id } } },
         relations: { amount: true },
       });
     } catch (e) {

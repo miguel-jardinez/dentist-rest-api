@@ -52,12 +52,6 @@ export class PatientPersonalFormEntity implements PersonalFormInterface {
   respiratory_diseases_comments?: string;
 
   @Column('boolean')
-  has_metabolic_syndrome: boolean;
-
-  @Column('text', { nullable: true })
-  metabolic_syndrome_comments?: string;
-
-  @Column('boolean')
   has_bone_or_joint_problems: boolean;
 
   @Column('text', { nullable: true })
