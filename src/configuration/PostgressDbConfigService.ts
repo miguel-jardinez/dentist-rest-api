@@ -14,6 +14,7 @@ export class PostgresDbConfigService implements TypeOrmOptionsFactory {
       url: dbURL,
       synchronize: true,
       entities: [`${__dirname}/../**/*.entity.{ts,js}`],
+      logging: process.env.NODE_ENV === 'development',
     };
   }
 }

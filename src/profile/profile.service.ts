@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Repository } from 'typeorm';
@@ -13,6 +13,8 @@ interface ProfileServiceInterface {
 
 @Injectable()
 export class ProfileService implements ProfileServiceInterface {
+  private readonly logger = new Logger(ProfileService.name);
+
   constructor(
     @InjectRepository(ProfileEntity)
     private readonly profileRepository: Repository<ProfileEntity>,
@@ -59,7 +61,11 @@ export class ProfileService implements ProfileServiceInterface {
         where: { user: { id } },
       });
     } catch (e) {
-      this.errorService.errorHandling('404', e.message);
+      this.logger.log(`Profile with id: ${id} not found please create one`);
+      this.errorService.errorHandling(
+        '404',
+        'Profile not found please create one first',
+      );
     }
   }
 }

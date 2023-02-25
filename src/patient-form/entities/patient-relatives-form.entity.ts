@@ -1,4 +1,5 @@
 import {
+  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -7,11 +8,37 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ProfileEntity } from '../../profile/entities/profile.entity';
+import { RelativeFormInterface } from '../interfaces/dto/interface.relatives';
+import { RelativesEnum } from '../types/relativesEnum';
 
 @Entity('relatives_form')
-export class PatientRelativesFormEntity {
+export class PatientRelativesFormEntity implements RelativeFormInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column('boolean')
+  relative_has_asthma: boolean;
+
+  @Column('boolean')
+  relative_has_cancer: boolean;
+
+  @Column('boolean')
+  relative_has_diabetes: boolean;
+
+  @Column('boolean')
+  relative_has_heart_disease: boolean;
+
+  @Column({ type: 'simple-array', enum: RelativesEnum, nullable: true })
+  relative_with_asthma: RelativesEnum[];
+
+  @Column({ type: 'simple-array', enum: RelativesEnum, nullable: true })
+  relative_with_cancer: RelativesEnum[];
+
+  @Column({ type: 'simple-array', enum: RelativesEnum, nullable: true })
+  relative_with_diabetes: RelativesEnum[];
+
+  @Column({ type: 'simple-array', enum: RelativesEnum, nullable: true })
+  relative_with_hearth_disease: RelativesEnum[];
 
   @OneToOne(() => ProfileEntity, (profile) => profile.relatives_form, {
     onDelete: 'CASCADE',
