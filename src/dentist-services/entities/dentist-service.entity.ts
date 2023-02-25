@@ -20,6 +20,9 @@ export class DentistServiceEntity {
   @Column('text')
   description: string;
 
+  @Column('boolean', { default: true })
+  is_visible: boolean;
+
   @OneToOne(() => AmountEntityEntity, (amount) => amount.service, {
     cascade: ['remove'],
   })

@@ -38,6 +38,8 @@ export const MockFullAddress = (id: string): AddressEntity => ({
     relatives_form: null,
     personal_form: null,
     user: {
+      is_phone_verified: false,
+      is_email_verified: false,
       profile: null,
       id,
       role: UserRole.PATIENT,

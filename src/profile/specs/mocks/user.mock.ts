@@ -10,6 +10,8 @@ export const UserMock: UserEntity = {
   email: faker.internet.email(),
   id: faker.datatype.uuid(),
   is_active: true,
+  is_email_verified: false,
+  is_phone_verified: false,
   last_changed_date_time: faker.date.past(),
   password: faker.internet.password(),
   profile: {

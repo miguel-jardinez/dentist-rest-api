@@ -39,23 +39,27 @@ export class ProfileEntity implements ProfileInterface {
 
   @ManyToOne(() => AddressEntity, (address) => address.profile, {
     cascade: ['remove'],
+    nullable: true,
   })
-  address: AddressEntity[];
+  address?: AddressEntity[];
 
   @OneToMany(() => DentistServiceEntity, (service) => service.profile, {
     cascade: ['remove'],
+    nullable: true,
   })
-  services: DentistServiceEntity[];
+  services?: DentistServiceEntity[];
 
   @OneToOne(() => PatientRelativesFormEntity, (form) => form.profile, {
     cascade: ['remove'],
+    nullable: true,
   })
-  relatives_form: PatientRelativesFormEntity;
+  relatives_form?: PatientRelativesFormEntity;
 
   @OneToOne(() => PatientPersonalFormEntity, (form) => form.profile, {
     cascade: ['remove'],
+    nullable: true,
   })
-  personal_form: PatientPersonalFormEntity;
+  personal_form?: PatientPersonalFormEntity;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   create_date_time: Date;

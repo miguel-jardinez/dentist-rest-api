@@ -30,17 +30,18 @@ export class UserEntity implements UserModel {
 
   @OneToOne(() => ProfileEntity, (profile) => profile.user, {
     cascade: ['remove'],
+    nullable: true,
   })
-  profile: ProfileEntity;
+  profile?: ProfileEntity;
 
   @Column({ type: 'boolean', nullable: true, default: false })
-  is_active?: boolean;
+  is_active: boolean;
 
   @Column({ type: 'boolean', nullable: true, default: false })
-  is_phone_verified?: boolean;
+  is_phone_verified: boolean;
 
   @Column({ type: 'boolean', nullable: true, default: false })
-  is_email_verified?: boolean;
+  is_email_verified: boolean;
 
   @Column({ enum: UserRole, default: UserRole.PATIENT })
   role: UserRole;
