@@ -10,7 +10,6 @@ export const MockAddress = (id: string): AddressEntity => ({
   address_number_exterior: faker.address.buildingNumber(),
   profile: null,
   id,
-  is_default: false,
   suburb: faker.address.street(),
   coordinates: [
     Number(faker.address.latitude()),
@@ -19,8 +18,8 @@ export const MockAddress = (id: string): AddressEntity => ({
   country: faker.address.country(),
   address_line: faker.address.streetAddress(),
   postal_code: faker.address.zipCode(),
-  state: faker.address.state(),
   address_number_interior: faker.address.buildingNumber(),
+  iso_code: 'MX-HID',
 });
 
 export const MockFullAddress = (id: string): AddressEntity => ({
@@ -29,8 +28,9 @@ export const MockFullAddress = (id: string): AddressEntity => ({
   profile: {
     id: faker.datatype.uuid(),
     address: [],
-    first_name: faker.name.firstName(),
-    last_name: faker.name.lastName(),
+    name: faker.name.firstName(),
+    mother_last_name: faker.name.lastName(),
+    father_last_name: faker.name.lastName(),
     phone_number: faker.phone.number(),
     services: [],
     last_changed_date_time: faker.date.recent(),
@@ -43,7 +43,6 @@ export const MockFullAddress = (id: string): AddressEntity => ({
       profile: null,
       id,
       role: UserRole.PATIENT,
-      username: faker.internet.userName(),
       password: faker.internet.password(),
       email: faker.internet.email(),
       create_date_time: faker.date.past(),
@@ -55,7 +54,6 @@ export const MockFullAddress = (id: string): AddressEntity => ({
     },
   },
   id: faker.datatype.uuid(),
-  is_default: false,
   suburb: faker.address.street(),
   coordinates: [
     Number(faker.address.latitude()),
@@ -64,8 +62,8 @@ export const MockFullAddress = (id: string): AddressEntity => ({
   country: faker.address.country(),
   address_line: faker.address.streetAddress(),
   postal_code: faker.address.zipCode(),
-  state: faker.address.state(),
   address_number_interior: faker.address.buildingNumber(),
+  iso_code: 'MX-HID',
 });
 
 export const MockCreateAddress = (
@@ -75,7 +73,7 @@ export const MockCreateAddress = (
 ): AddressEntity => ({
   id,
   address_number_interior: createAddressDto.address_number_interior,
-  state: createAddressDto.state,
+  iso_code: 'MX-HID',
   suburb: createAddressDto.suburb,
   address_line: createAddressDto.address_line,
   postal_code: createAddressDto.postal_code,
@@ -83,8 +81,9 @@ export const MockCreateAddress = (
   coordinates: createAddressDto.coordinates,
   profile: {
     id: profileId,
-    first_name: faker.name.firstName(),
-    last_name: faker.name.lastName(),
+    name: faker.name.firstName(),
+    mother_last_name: faker.name.lastName(),
+    father_last_name: faker.name.lastName(),
     user: null,
     address: null,
     phone_number: faker.phone.number(),
@@ -95,14 +94,14 @@ export const MockCreateAddress = (
     personal_form: null,
   },
   full_address: createAddressDto.full_address,
-  is_default: createAddressDto.is_default,
   address_number_exterior: createAddressDto.address_number_exterior,
 });
 
 export const MockProfile = (profileId: string): ProfileEntity => ({
   id: profileId,
-  first_name: faker.name.firstName(),
-  last_name: faker.name.lastName(),
+  name: faker.name.firstName(),
+  mother_last_name: faker.name.lastName(),
+  father_last_name: faker.name.lastName(),
   user: null,
   address: null,
   phone_number: faker.phone.number(),

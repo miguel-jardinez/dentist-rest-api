@@ -10,6 +10,7 @@ import { ErrorService } from '../utils/ErrorService';
 import { ProfileService } from '../profile/profile.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Usertype } from '../utils/types/User';
 
 @Injectable()
 export class PatientFormService implements InterfaceFormService {
@@ -23,11 +24,11 @@ export class PatientFormService implements InterfaceFormService {
     private readonly profileService: ProfileService,
   ) {}
   public async createPersonalForm(
-    userId: string,
+    user: Usertype,
     createPersonalForm: CreatePatientPersonalFormDto,
   ): Promise<PatientPersonalFormEntity> {
     try {
-      const profile = await this.profileService.findByUserId(userId);
+      const profile = await this.profileService.findByUserId(user);
       const personalForm = this.personalFormEntity.create(createPersonalForm);
       const data = await this.personalFormEntity.save({
         ...personalForm,
@@ -35,22 +36,22 @@ export class PatientFormService implements InterfaceFormService {
       });
 
       this.logger.log(
-        `Personal form data was created user_id: ${userId} form_id: ${data.id}`,
+        `Personal form data was created user_id: ${user.id} form_id: ${data.id}`,
       );
 
       return data;
     } catch (e) {
-      this.logger.error(`Personal form was not created to user_id: ${userId}`);
+      this.logger.error(`Personal form was not created to user_id: ${user.id}`);
       this.errorService.errorHandling('404', e.message);
     }
   }
 
   public async createRelativesForm(
-    userId: string,
+    user: Usertype,
     createRelativeForm: CreatePatientRelativesFormDto,
   ): Promise<PatientRelativesFormEntity> {
     try {
-      const profile = await this.profileService.findByUserId(userId);
+      const profile = await this.profileService.findByUserId(user);
       const relativeForm = this.relativeFormEntity.create(createRelativeForm);
       const data = await this.relativeFormEntity.save({
         ...relativeForm,
@@ -58,12 +59,14 @@ export class PatientFormService implements InterfaceFormService {
       });
 
       this.logger.log(
-        `Relatives form data was created user_id: ${userId} form_id: ${data.id}`,
+        `Relatives form data was created user_id: ${user.id} form_id: ${data.id}`,
       );
 
       return data;
     } catch (e) {
-      this.logger.error(`Relatives form was not created to user_id: ${userId}`);
+      this.logger.error(
+        `Relatives form was not created to user_id: ${user.id}`,
+      );
       this.errorService.errorHandling('404', e.message);
     }
   }

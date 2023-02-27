@@ -6,6 +6,10 @@ import { ProfileEntity } from '../entities/profile.entity';
 import { Repository } from 'typeorm';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { CreateProfileDto } from '../dto/create-profile.dto';
+import { faker } from '@faker-js/faker';
+import { UpdateProfileDto } from '../dto/update-profile.dto';
+import { Usertype } from '../../utils/types/User';
+import { UserRole } from '../../utils/RoleEnum';
 
 describe('ProfileService', () => {
   let service: ProfileService;
@@ -44,16 +48,21 @@ describe('ProfileService', () => {
 
   describe('FindUserById', () => {
     it('should return userEntity where id was passed', async () => {
+      const user = <Usertype>{
+        id: faker.datatype.uuid(),
+        role: UserRole.PATIENT,
+      };
+
       const jestSpy = jest.spyOn(repo, 'findOneOrFail').mockResolvedValue({
-        first_name: 'mock_firs_name',
-        last_name: 'mock_last_name',
-        phone_number: 'mock_phone_number',
-        id: 'mock_id',
+        name: faker.name.fullName(),
+        mother_last_name: faker.name.lastName(),
+        phone_number: faker.phone.number(),
+        id: faker.datatype.uuid(),
         user: null,
         address: null,
-      });
+      } as ProfileEntity);
 
-      const data = await service.findByUserId('mock_id');
+      const data = await service.findByUserId(user);
 
       expect(jestSpy).toBeCalled();
       expect(data.id).toBe('mock_id');
@@ -67,7 +76,12 @@ describe('ProfileService', () => {
         message: 'User was not found',
       });
 
-      await expect(service.findByUserId('mock_id')).rejects.toThrowError(
+      const user = <Usertype>{
+        id: faker.datatype.uuid(),
+        role: UserRole.PATIENT,
+      };
+
+      await expect(service.findByUserId(user)).rejects.toThrowError(
         new HttpException(errorText, HttpStatus.NOT_FOUND),
       );
 
@@ -79,7 +93,7 @@ describe('ProfileService', () => {
   describe('Update', () => {
     it('should return string success update when repository return a user affect', async () => {
       const mockId = 'mock_id';
-      const mockDataUpdate = {
+      const mockDataUpdate = <UpdateProfileDto>{
         first_name: 'new_mock_first_name',
       };
 
@@ -95,7 +109,7 @@ describe('ProfileService', () => {
 
     it('should return user not exist if id is wrong', async () => {
       const mockId = 'mock_id';
-      const mockDataUpdate = {
+      const mockDataUpdate = <UpdateProfileDto>{
         first_name: 'new_mock_first_name',
       };
 
@@ -113,9 +127,10 @@ describe('ProfileService', () => {
   describe('Create new profile', () => {
     it('should return string and call create and save repo functions', async () => {
       const CreateProfileDto: CreateProfileDto = {
-        first_name: 'mock_firs_name',
-        last_name: 'mock_last_name',
-        phone_number: 'mock_phone_number',
+        name: faker.name.fullName(),
+        father_last_name: faker.name.lastName(),
+        mother_last_name: faker.name.lastName(),
+        phone_number: faker.phone.number(),
       };
 
       const createSpy = jest.spyOn(repo, 'create');

@@ -4,15 +4,18 @@ import { PatientRelativesFormEntity } from '../entities/patient-relatives-form.e
 import { CreatePatientRelativesFormDto } from '../dto/relatives-form/create-patient-relatives-form.dto';
 import { UpdatePatientPersonalFormDto } from '../dto/personal-form/update-patient-personal-form.dto';
 import { UpdatePatientRelativesFormDto } from '../dto/relatives-form/update-patient-relatives-form.dto';
+import { UserRole } from '../../utils/RoleEnum';
+
+export type Usertype = { id: string; role: UserRole };
 
 export interface InterfaceFormService {
   createPersonalForm: (
-    userId: string,
+    user: Usertype,
     createPersonalForm: CreatePatientPersonalFormDto,
   ) => Promise<PatientPersonalFormEntity>;
 
   createRelativesForm: (
-    userId: string,
+    user: Usertype,
     createRelativeForm: CreatePatientRelativesFormDto,
   ) => Promise<PatientRelativesFormEntity>;
 

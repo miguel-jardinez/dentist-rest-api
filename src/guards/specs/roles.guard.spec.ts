@@ -48,11 +48,13 @@ describe('Roles Guard', () => {
           password: faker.internet.password(),
           role: UserRole.DENTIST,
           services: [],
-          username: faker.internet.userName(),
           id: faker.datatype.uuid(),
           profile: null,
-          lastChangedDateTime: faker.date.recent(),
-          createDateTime: faker.date.past(),
+          is_email_verified: true,
+          is_phone_verified: true,
+          is_active: true,
+          last_changed_date_time: faker.date.recent(),
+          create_date_time: faker.date.past(),
           async hashPassword(): Promise<void> {
             console.log('hashing');
           },
@@ -75,8 +77,11 @@ describe('Roles Guard', () => {
           username: faker.internet.userName(),
           id: faker.datatype.uuid(),
           profile: null,
-          lastChangedDateTime: faker.date.recent(),
-          createDateTime: faker.date.past(),
+          is_email_verified: true,
+          is_phone_verified: true,
+          is_active: true,
+          last_changed_date_time: faker.date.recent(),
+          create_date_time: faker.date.past(),
           async hashPassword(): Promise<void> {
             console.log('hashing');
           },

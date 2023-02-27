@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProfileService } from '../profile/profile.service';
 import { DirectionsTypesResponse } from './types/directionTypes';
+import { Usertype } from '../utils/types/User';
 
 export type DirectionsTypes =
   | 'driving-traffic'
@@ -28,22 +29,14 @@ export class AddressesService {
     private readonly profileService: ProfileService,
   ) {}
 
-  async create(createAddressDto: CreateAddressDto, id: string) {
+  async create(createAddressDto: CreateAddressDto, user: Usertype) {
     try {
-      const addresses = await this.findAll(id);
-      const profile = await this.profileService.findByUserId(id);
-
-      if (createAddressDto.is_default && addresses.length >= 1) {
-        await this.setDefaultAddress(addresses);
-      }
-
+      const profile = await this.profileService.findByUserId(user);
       const addressModel = this.addressEntity.create(createAddressDto);
 
       return await this.addressEntity.save({
         ...addressModel,
-        profile: {
-          id: profile.id,
-        },
+        profile: { id: profile.id },
       });
     } catch (e) {
       this.errorService.errorHandling('404', e.message);
@@ -73,35 +66,19 @@ export class AddressesService {
   async update(
     addressId: string,
     updateAddressDto: UpdateAddressDto,
-    userId: string,
+    user: Usertype,
   ): Promise<string> {
     try {
-      const address = await this.findAll(userId);
-      const profile = await this.profileService.findByUserId(userId);
-
-      if (updateAddressDto.is_default && address.length > 1) {
-        await this.setDefaultAddress(address);
-
-        return await this.updateAddress(
-          addressId,
-          profile.id,
-          updateAddressDto,
-        );
-      } else {
-        return await this.updateAddress(
-          addressId,
-          profile.id,
-          updateAddressDto,
-        );
-      }
+      const profile = await this.profileService.findByUserId(user);
+      return await this.updateAddress(addressId, profile.id, updateAddressDto);
     } catch (e) {
       this.errorService.errorHandling('404', e.message);
     }
   }
 
-  async remove(addressId: string, userId: string): Promise<string> {
+  async remove(addressId: string, user: Usertype): Promise<string> {
     try {
-      const profile = await this.profileService.findByUserId(userId);
+      const profile = await this.profileService.findByUserId(user);
       const response = await this.addressEntity.delete({
         id: addressId,
         profile: { id: profile.id },
@@ -186,14 +163,5 @@ export class AddressesService {
     }
 
     return `Address ${addressId} was updated successfully`;
-  }
-
-  private async setDefaultAddress(address: AddressEntity[]): Promise<void> {
-    const addressDefault = address.find((address) => address.is_default);
-
-    await this.addressEntity.update(
-      { id: addressDefault.id },
-      { is_default: false },
-    );
   }
 }

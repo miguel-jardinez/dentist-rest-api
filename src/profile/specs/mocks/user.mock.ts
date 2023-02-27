@@ -17,10 +17,11 @@ export const UserMock: UserEntity = {
   profile: {
     user: null,
     id: faker.datatype.uuid(),
-    last_name: faker.name.lastName(),
+    father_last_name: faker.name.lastName(),
+    mother_last_name: faker.name.lastName(),
     address: [],
     phone_number: faker.phone.number(),
-    first_name: faker.name.firstName(),
+    name: faker.name.firstName(),
     create_date_time: faker.date.past(),
     last_changed_date_time: faker.date.recent(),
     services: [],
@@ -28,5 +29,4 @@ export const UserMock: UserEntity = {
     personal_form: null,
   },
   role: UserRole.PATIENT,
-  username: faker.internet.userName(),
 };

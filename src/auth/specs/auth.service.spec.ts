@@ -115,7 +115,6 @@ describe('AuthService', () => {
         email: faker.internet.email(),
         password: faker.internet.password(),
         role: UserRole.PATIENT,
-        username: faker.internet.userName(),
       };
 
       const createSpy = jest

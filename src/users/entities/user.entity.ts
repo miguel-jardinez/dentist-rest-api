@@ -25,9 +25,6 @@ export class UserEntity implements UserModel {
   @Column({ type: 'text' })
   password: string;
 
-  @Column({ type: 'text' })
-  username: string;
-
   @OneToOne(() => ProfileEntity, (profile) => profile.user, {
     cascade: ['remove'],
     nullable: true,

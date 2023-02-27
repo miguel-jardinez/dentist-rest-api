@@ -16,6 +16,8 @@ import {
 } from './mocks/address.mock';
 import { MockAddressMapBox } from './mocks/mapBox.mock';
 import { createDto, updateDto } from './mocks/dtos.mock';
+import { Usertype } from '../../utils/types/User';
+import { UserRole } from '../../utils/RoleEnum';
 
 type KeyTypes = 'MAP_BOX_URL' | 'MAP_BOX_TOKEN';
 
@@ -138,19 +140,23 @@ describe('AddressesService', () => {
 
   describe('Create', () => {
     it('should return a Address entity when was created when user not have more than one address', async () => {
-      const addressId = faker.datatype.uuid();
-      const profileId = faker.datatype.uuid();
+      const user = <Usertype>{
+        id: faker.datatype.uuid(),
+        role: UserRole.PATIENT,
+      };
 
-      const AddressCreated = MockCreateAddress(addressId, createDto, profileId);
+      const addressId = faker.datatype.uuid();
+
+      const AddressCreated = MockCreateAddress(addressId, createDto, user.id);
       const AddressCreatedTwo = MockCreateAddress(
         addressId,
         createDto,
-        profileId,
+        user.id,
       );
       const AddressCreatedThree = MockCreateAddress(
         addressId,
         createDto,
-        profileId,
+        user.id,
       );
 
       const findAllAddress = jest
@@ -163,7 +169,7 @@ describe('AddressesService', () => {
 
       const findProfileSpy = jest
         .spyOn(profileService, 'findByUserId')
-        .mockResolvedValue(MockProfile(profileId));
+        .mockResolvedValue(MockProfile(user.id));
 
       const createSpy = jest
         .spyOn(repoAddress, 'create')
@@ -173,25 +179,29 @@ describe('AddressesService', () => {
         .spyOn(repoAddress, 'save')
         .mockResolvedValue(AddressCreated);
 
-      const data = await service.create(createDto, profileId);
-      expect(findProfileSpy).toHaveBeenCalledWith(profileId);
+      const data = await service.create(createDto, user);
+      expect(findProfileSpy).toHaveBeenCalledWith(user);
       expect(createSpy).toHaveBeenCalledWith(createDto);
       expect(saveSpy).toHaveBeenCalled();
       expect(data).toEqual(AddressCreated);
       expect(findAllAddress).toHaveBeenCalledWith({
-        where: { profile: { user: { id: profileId } } },
+        where: { profile: { user: { id: user.id } } },
       });
     });
 
     it('should return address entity as default when user has more than one address', async () => {
-      const addressId = faker.datatype.uuid();
-      const profileId = faker.datatype.uuid();
+      const user = <Usertype>{
+        id: faker.datatype.uuid(),
+        role: UserRole.PATIENT,
+      };
 
-      const AddressCreated = MockCreateAddress(addressId, createDto, profileId);
+      const addressId = faker.datatype.uuid();
+
+      const AddressCreated = MockCreateAddress(addressId, createDto, user.id);
 
       const findProfileSpy = jest
         .spyOn(profileService, 'findByUserId')
-        .mockResolvedValue(MockProfile(profileId));
+        .mockResolvedValue(MockProfile(user.id));
 
       const createSpy = jest
         .spyOn(repoAddress, 'create')
@@ -201,8 +211,8 @@ describe('AddressesService', () => {
         .spyOn(repoAddress, 'save')
         .mockResolvedValue(AddressCreated);
 
-      const data = await service.create(createDto, profileId);
-      expect(findProfileSpy).toHaveBeenCalledWith(profileId);
+      const data = await service.create(createDto, user);
+      expect(findProfileSpy).toHaveBeenCalledWith(user);
       expect(createSpy).toHaveBeenCalledWith(createDto);
       expect(saveSpy).toHaveBeenCalled();
       expect(data).toEqual(AddressCreated);
@@ -211,7 +221,11 @@ describe('AddressesService', () => {
 
   describe('Remove', () => {
     it('should return success when address was deleted', async () => {
-      const userId = faker.datatype.uuid();
+      const user = <Usertype>{
+        id: faker.datatype.uuid(),
+        role: UserRole.PATIENT,
+      };
+
       const addressId = faker.datatype.uuid();
       const profileId = faker.datatype.uuid();
 
@@ -223,14 +237,14 @@ describe('AddressesService', () => {
         .spyOn(repoAddress, 'delete')
         .mockResolvedValue({ affected: 1, raw: [] });
 
-      const data = await service.remove(addressId, userId);
+      const data = await service.remove(addressId, user);
 
       expect(data).toBe(`Address ${addressId} was deleted successful`);
       expect(deleteSpy).toHaveBeenCalledWith({
         id: addressId,
         profile: { id: profileId },
       });
-      expect(findProfileSpy).toHaveBeenCalledWith(userId);
+      expect(findProfileSpy).toHaveBeenCalledWith(user);
     });
   });
 
@@ -245,8 +259,12 @@ describe('AddressesService', () => {
 
   describe('Update Address', () => {
     it('should return string success when address was updated correctly', async () => {
+      const user = <Usertype>{
+        id: faker.datatype.uuid(),
+        role: UserRole.PATIENT,
+      };
+
       const addressId = faker.datatype.uuid();
-      const userId = faker.datatype.uuid();
       const profileId = faker.datatype.uuid();
 
       const findAll = jest.spyOn(service, 'findAll').mockResolvedValue([]);
@@ -259,9 +277,9 @@ describe('AddressesService', () => {
         .spyOn(repoAddress, 'update')
         .mockResolvedValue({ affected: 1, raw: [], generatedMaps: [] });
 
-      const data = await service.update(addressId, updateDto, userId);
-      expect(profileServiceSpy).toHaveBeenCalledWith(userId);
-      expect(findAll).toHaveBeenCalledWith(userId);
+      const data = await service.update(addressId, updateDto, user);
+      expect(profileServiceSpy).toHaveBeenCalledWith(user);
+      expect(findAll).toHaveBeenCalledWith(user);
       expect(updateSpy).toHaveBeenCalledWith(
         { id: addressId, profile: { id: profileId } },
         updateDto,

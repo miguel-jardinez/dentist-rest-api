@@ -1,5 +1,11 @@
 import { CreateAmountDto } from '../amount/create-amount.dto';
-import { IsNotEmptyObject, IsString, ValidateNested } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNotEmptyObject,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateDentistServiceDto {
@@ -8,6 +14,10 @@ export class CreateDentistServiceDto {
 
   @IsString()
   description: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  is_visible: boolean;
 
   @IsNotEmptyObject()
   @ValidateNested({ each: true })

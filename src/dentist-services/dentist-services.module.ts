@@ -5,9 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DentistServiceEntity } from './entities/dentist-service.entity';
 import { AmountEntityEntity } from './entities/amount-entity.entity';
 import { ErrorService } from '../utils/ErrorService';
+import { ProfileModule } from '../profile/profile.module';
 
 @Module({
   imports: [
+    ProfileModule,
     TypeOrmModule.forFeature([DentistServiceEntity, AmountEntityEntity]),
   ],
   controllers: [DentistServicesController],

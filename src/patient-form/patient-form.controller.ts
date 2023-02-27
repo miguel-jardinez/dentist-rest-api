@@ -32,7 +32,7 @@ export class PatientFormController implements InterfaceController {
     @Req() req,
   ) {
     return this.patientFormService.createPersonalForm(
-      req.user.id,
+      req.user,
       createPatientPersonalFormDto,
     );
   }
@@ -45,7 +45,7 @@ export class PatientFormController implements InterfaceController {
     @Req() req,
   ) {
     return this.patientFormService.createRelativesForm(
-      req.user.id,
+      req.user,
       createPatientRelativeFormDto,
     );
   }

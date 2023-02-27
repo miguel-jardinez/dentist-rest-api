@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PatientFormService } from './patient-form.service';
+import { PatientFormService } from '../patient-form.service';
 
 describe('PatientFormService', () => {
   let service: PatientFormService;

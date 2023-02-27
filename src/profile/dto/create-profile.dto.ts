@@ -3,10 +3,13 @@ import { IsString } from 'class-validator';
 
 export class CreateProfileDto implements ProfileInterface {
   @IsString()
-  first_name: string;
+  name: string;
 
   @IsString()
-  last_name: string;
+  father_last_name: string;
+
+  @IsString()
+  mother_last_name: string;
 
   @IsString()
   phone_number: string;

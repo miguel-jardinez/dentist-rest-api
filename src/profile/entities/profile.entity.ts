@@ -3,7 +3,6 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -15,17 +14,21 @@ import { AddressEntity } from '../../addresses/entities/address.entity';
 import { DentistServiceEntity } from '../../dentist-services/entities/dentist-service.entity';
 import { PatientRelativesFormEntity } from '../../patient-form/entities/patient-relatives-form.entity';
 import { PatientPersonalFormEntity } from '../../patient-form/entities/patient-personal-form.entity';
+import { ProfessionalLicenseEntity } from '../../professional-license/entities/professional-license.entity';
 
 @Entity('profile')
 export class ProfileEntity implements ProfileInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('text')
-  first_name: string;
+  @Column('text', { nullable: true })
+  name: string;
 
-  @Column('text')
-  last_name: string;
+  @Column('text', { nullable: true })
+  father_last_name: string;
+
+  @Column('text', { nullable: true })
+  mother_last_name: string;
 
   @Column('text', { nullable: true })
   phone_number?: string;
@@ -37,7 +40,7 @@ export class ProfileEntity implements ProfileInterface {
   @JoinColumn({ name: 'userid' })
   user: UserEntity;
 
-  @ManyToOne(() => AddressEntity, (address) => address.profile, {
+  @OneToMany(() => AddressEntity, (address) => address.profile, {
     cascade: ['remove'],
     nullable: true,
   })
@@ -60,6 +63,12 @@ export class ProfileEntity implements ProfileInterface {
     nullable: true,
   })
   personal_form?: PatientPersonalFormEntity;
+
+  @OneToOne(() => ProfessionalLicenseEntity, (license) => license.profile, {
+    cascade: ['remove'],
+    nullable: true,
+  })
+  license?: ProfessionalLicenseEntity;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   create_date_time: Date;

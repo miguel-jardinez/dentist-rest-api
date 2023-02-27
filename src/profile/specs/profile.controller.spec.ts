@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProfileController } from '../profile.controller';
 import { ProfileService } from '../profile.service';
 import { CreateProfileDto } from '../dto/create-profile.dto';
+import { faker } from '@faker-js/faker';
 
 const mock_id = 'mock_id';
 
@@ -44,9 +45,10 @@ describe('ProfileController', () => {
     it('should return successfully string when profiles is created', async () => {
       const textResponse = 'Profile added Successfully';
       const dataMock: CreateProfileDto = {
-        phone_number: 'mock_phone_number',
-        last_name: 'mock_last_name',
-        first_name: 'mock_firs_name',
+        father_last_name: faker.name.lastName(),
+        mother_last_name: faker.name.lastName(),
+        name: faker.name.fullName(),
+        phone_number: faker.phone.number(),
       };
 
       jest
@@ -65,9 +67,10 @@ describe('ProfileController', () => {
       const textResponse = `User ${mock_id} has been updated successfully`;
 
       const dataMock: CreateProfileDto = {
-        phone_number: 'mock_phone_number',
-        last_name: 'mock_last_name',
-        first_name: 'mock_firs_name',
+        father_last_name: faker.name.lastName(),
+        mother_last_name: faker.name.lastName(),
+        name: faker.name.fullName(),
+        phone_number: faker.phone.number(),
       };
 
       jest

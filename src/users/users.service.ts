@@ -6,6 +6,7 @@ import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { ErrorService } from '../utils/ErrorService';
 import { UserServiceInterface } from './interfaces/UserService.interface';
+import { UserRole } from '../utils/RoleEnum';
 
 @Injectable()
 export class UsersService implements UserServiceInterface {
@@ -58,6 +59,46 @@ export class UsersService implements UserServiceInterface {
   public async findByEmail(email: string): Promise<UserEntity> {
     try {
       return await this.user.findOne({ where: { email } });
+    } catch (e) {
+      this.errorService.errorHandling(e.status.string(), e.response);
+    }
+  }
+
+  public async findDentistByRegion(region: string): Promise<UserEntity[]> {
+    try {
+      return await this.user.find({
+        where: {
+          role: UserRole.DENTIST,
+          profile: { address: { iso_code: region } },
+        },
+        relations: {
+          profile: {
+            services: true,
+            address: true,
+            license: true,
+          },
+        },
+      });
+    } catch (e) {
+      this.errorService.errorHandling(e.status.string(), e.response);
+    }
+  }
+
+  public async findDentistById(id): Promise<UserEntity> {
+    try {
+      return await this.user.findOneOrFail({
+        where: {
+          role: UserRole.DENTIST,
+          id,
+        },
+        relations: {
+          profile: {
+            services: true,
+            address: true,
+            license: true,
+          },
+        },
+      });
     } catch (e) {
       this.errorService.errorHandling(e.status.string(), e.response);
     }

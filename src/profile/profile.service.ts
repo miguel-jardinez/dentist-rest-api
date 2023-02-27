@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { ProfileEntity } from './entities/profile.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorService } from '../utils/ErrorService';
+import { Usertype } from '../utils/types/User';
 
 interface ProfileServiceInterface {
   create(createProfileDto: CreateProfileDto, id: string): Promise<string>;
@@ -55,13 +56,27 @@ export class ProfileService implements ProfileServiceInterface {
     return `User ${id} has been updated successfully`;
   }
 
-  async findByUserId(id): Promise<ProfileEntity> {
+  async findByUserId(user: Usertype): Promise<ProfileEntity> {
     try {
+      const isPatient = user.role === 'PATIENT';
+
       return await this.profileRepository.findOneOrFail({
-        where: { user: { id } },
+        where: { user: { id: user.id } },
+        relations: {
+          user: true,
+          address: true,
+          personal_form: isPatient,
+          relatives_form: isPatient,
+          services: {
+            amount: !isPatient,
+          },
+          license: !isPatient,
+        },
       });
     } catch (e) {
-      this.logger.log(`Profile with id: ${id} not found please create one`);
+      this.logger.log(
+        `Profile with id: ${user.id} not found please create one`,
+      );
       this.errorService.errorHandling(
         '404',
         'Profile not found please create one first',

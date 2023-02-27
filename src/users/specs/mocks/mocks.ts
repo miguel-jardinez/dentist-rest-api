@@ -10,21 +10,18 @@ export const ID_MOCK = 'id_mock';
 export const LIST_USERS_MOCK: UserModel[] = [
   {
     id: `${ID_MOCK}_1`,
-    username: `${USERNAME_MOCK}_1`,
     password: `${PASSWORD_MOCK}_1`,
     email: `${EMAIL_MOCK}_1`,
     role: UserRole.DENTIST,
   },
   {
     id: `${ID_MOCK}_2`,
-    username: `${USERNAME_MOCK}_2`,
     password: `${PASSWORD_MOCK}_2`,
     email: `${EMAIL_MOCK}_2`,
     role: UserRole.PATIENT,
   },
   {
     id: `${ID_MOCK}_3`,
-    username: `${USERNAME_MOCK}_3`,
     password: `${PASSWORD_MOCK}_3`,
     email: `${EMAIL_MOCK}_3`,
     role: UserRole.PATIENT,
@@ -36,7 +33,6 @@ export const OneUserMockId = (id: string): UserModel => {
     id,
     email: EMAIL_MOCK,
     password: PASSWORD_MOCK,
-    username: USERNAME_MOCK,
     role: UserRole.PATIENT,
   };
 };
@@ -54,7 +50,6 @@ export const OneUserMockEmail = (email): UserModel => {
     id: ID_MOCK,
     email,
     password: PASSWORD_MOCK,
-    username: USERNAME_MOCK,
     role: UserRole.DENTIST,
   };
 };

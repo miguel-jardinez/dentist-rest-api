@@ -8,7 +8,6 @@ import {
   Post,
   Req,
   UseGuards,
-  Query,
 } from '@nestjs/common';
 import { DentistServicesService } from './dentist-services.service';
 import { CreateDentistServiceDto } from './dto/services/create-dentist-service.dto';
@@ -29,15 +28,17 @@ export class DentistServicesController {
   @RolesAuth(UserRole.DENTIST)
   @UseGuards(RolesGuard)
   create(@Body() createDentistServiceDto: CreateDentistServiceDto, @Req() req) {
-    const id = req.user.id;
-    return this.dentistServicesService.create(createDentistServiceDto, id);
+    return this.dentistServicesService.create(
+      createDentistServiceDto,
+      req.user,
+    );
   }
 
   @Get('/find-all?')
   @RolesAuth(UserRole.DENTIST)
   @UseGuards(RolesGuard)
-  findAll(@Req() req, @Query() listed: boolean) {
-    return this.dentistServicesService.findAll(req.user.id, listed);
+  findAll(@Req() req) {
+    return this.dentistServicesService.findAll(req.user.id);
   }
 
   @Get('/find/:id')

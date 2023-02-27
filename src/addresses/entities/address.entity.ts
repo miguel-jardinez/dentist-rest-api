@@ -34,18 +34,16 @@ export class AddressEntity {
   suburb?: string;
 
   @Column('text', { nullable: true })
-  state?: string;
-
-  @Column('text', { nullable: true })
   country?: string;
 
-  @Column('boolean', { default: false })
-  is_default: boolean;
+  @Column('text')
+  iso_code: string;
 
   @ManyToOne(() => ProfileEntity, (profile) => profile.address, {
     onDelete: 'CASCADE',
     orphanedRowAction: 'delete',
+    nullable: false,
   })
-  @JoinColumn({ name: 'profileid' })
+  @JoinColumn({ name: 'profile_id' })
   profile: ProfileEntity;
 }

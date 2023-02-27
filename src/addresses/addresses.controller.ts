@@ -27,7 +27,7 @@ export class AddressesController {
 
   @Post('/create')
   create(@Body() createAddressDto: CreateAddressDto, @Req() req) {
-    return this.addressesService.create(createAddressDto, req.user.id);
+    return this.addressesService.create(createAddressDto, req.user);
   }
 
   @Post('/directions/:coordinates?')
@@ -54,11 +54,11 @@ export class AddressesController {
     @Body() updateAddressDto: UpdateAddressDto,
     @Req() req,
   ) {
-    return this.addressesService.update(id, updateAddressDto, req.user.id);
+    return this.addressesService.update(id, updateAddressDto, req.user);
   }
 
   @Delete('/delete/:id')
   remove(@Param('id') id: string, @Req() req) {
-    return this.addressesService.remove(id, req.user.id);
+    return this.addressesService.remove(id, req.user);
   }
 }

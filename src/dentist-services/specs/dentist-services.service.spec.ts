@@ -14,6 +14,8 @@ import { faker } from '@faker-js/faker';
 import { CurrencyEnum } from '../types/currencyEnum';
 import { UpdateDentistServiceDto } from '../dto/services/update-dentist-service.dto';
 import { CreateDentistServiceDto } from '../dto/services/create-dentist-service.dto';
+import { Usertype } from '../../utils/types/User';
+import { UserRole } from '../../utils/RoleEnum';
 
 describe('DentistServicesService', () => {
   let service: DentistServicesService;
@@ -172,7 +174,10 @@ describe('DentistServicesService', () => {
 
   describe('Create', () => {
     it('should return success string when servies was created', async () => {
-      const userId = faker.datatype.uuid();
+      const user = <Usertype>{
+        id: faker.datatype.uuid(),
+        role: UserRole.DENTIST,
+      };
 
       const createServiceDto: CreateDentistServiceDto = {
         amount: {
@@ -181,6 +186,7 @@ describe('DentistServicesService', () => {
         },
         description: faker.lorem.paragraph(15),
         name: faker.name.jobTitle(),
+        is_visible: true,
       };
 
       const createServiceSpy = jest.spyOn(repoService, 'create');
@@ -194,7 +200,7 @@ describe('DentistServicesService', () => {
         .spyOn(repoAmount, 'save')
         .mockResolvedValue(MockAmountService);
 
-      const data = await service.create(createServiceDto, userId);
+      const data = await service.create(createServiceDto, user);
 
       expect(data).toBe(
         `Service ${MockDentistService.name} was created successfully`,

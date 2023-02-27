@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { DentistServicesModule } from './dentist-services/dentist-services.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { PatientFormModule } from './patient-form/patient-form.module';
+import { DentistsModule } from './dentists/dentists.module';
+import { ProfessionalLicenseModule } from './professional-license/professional-license.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { PatientFormModule } from './patient-form/patient-form.module';
     DentistServicesModule,
     AddressesModule,
     PatientFormModule,
+    DentistsModule,
+    ProfessionalLicenseModule,
   ],
   controllers: [],
   providers: [],

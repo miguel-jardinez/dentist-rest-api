@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsBoolean,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateAddressDto {
   @IsArray()
@@ -31,19 +25,14 @@ export class CreateAddressDto {
   @IsNotEmpty()
   address_line: string;
 
-  @IsBoolean()
-  @IsNotEmpty()
-  is_default: boolean;
+  @IsString()
+  iso_code: string;
 
   @IsString()
   @IsOptional()
-  state?: string;
+  address_number_interior?: string;
 
   @IsString()
   @IsNotEmpty()
-  address_number_interior: string;
-
-  @IsString()
-  @IsOptional()
-  address_number_exterior?: string;
+  address_number_exterior: string;
 }
