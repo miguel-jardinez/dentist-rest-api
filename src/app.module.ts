@@ -10,6 +10,7 @@ import { AddressesModule } from './addresses/addresses.module';
 import { PatientFormModule } from './patient-form/patient-form.module';
 import { DentistsModule } from './dentists/dentists.module';
 import { ProfessionalLicenseModule } from './professional-license/professional-license.module';
+import { WorkingHoursModule } from './working-hours/working-hours.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ProfessionalLicenseModule } from './professional-license/professional-l
     PatientFormModule,
     DentistsModule,
     ProfessionalLicenseModule,
+    WorkingHoursModule,
   ],
   controllers: [],
   providers: [],

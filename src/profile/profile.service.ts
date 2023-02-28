@@ -67,6 +67,9 @@ export class ProfileService implements ProfileServiceInterface {
           address: true,
           personal_form: isPatient,
           relatives_form: isPatient,
+          working_days: {
+            hours: !isPatient,
+          },
           services: {
             amount: !isPatient,
           },
