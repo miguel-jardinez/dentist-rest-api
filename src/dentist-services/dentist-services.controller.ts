@@ -16,6 +16,7 @@ import { UserRole } from '../utils/RoleEnum';
 import { RolesAuth } from '../guards/roles/roles.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../guards/roles/roles.guard';
+import { DentistServiceEntity } from './entities/dentist-service.entity';
 
 @Controller('dentists-services')
 @UseGuards(AuthGuard('jwt'))
@@ -44,7 +45,7 @@ export class DentistServicesController {
   @Get('/find/:id')
   @RolesAuth(UserRole.DENTIST)
   @UseGuards(RolesGuard)
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<DentistServiceEntity> {
     return this.dentistServicesService.findOne(id);
   }
 
