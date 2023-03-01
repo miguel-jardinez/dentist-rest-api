@@ -101,7 +101,6 @@ export class DentistServicesService {
     } catch (e) {
       this.errorService.errorHandling('404', e.message);
     }
-    return `This action updates a #${serviceId} dentistService ${updateDentistServiceDto}`;
   }
 
   async remove(serviceId: string, userId: string): Promise<string> {
