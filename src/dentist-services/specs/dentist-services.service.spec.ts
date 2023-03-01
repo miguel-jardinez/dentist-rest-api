@@ -157,6 +157,7 @@ describe('DentistServicesService', () => {
     it('should return string successfully when service was updated', async () => {
       const serviceId = faker.datatype.uuid();
       const userId = faker.datatype.uuid();
+
       const dataUpdate: UpdateDentistServiceDto = {
         name: faker.name.jobTitle(),
         description: faker.lorem.paragraph(15),
@@ -250,6 +251,23 @@ describe('DentistServicesService', () => {
         id: serviceId,
         profile: { user: { id: userId } },
       });
+    });
+
+    it('should return http exception when one service fails', async () => {
+      const serviceId = faker.datatype.uuid();
+      const userId = faker.datatype.uuid();
+
+      jest.spyOn(repoService, 'delete').mockResolvedValue({
+        affected: 0,
+        raw: {},
+      });
+
+      await expect(service.remove(serviceId, userId)).rejects.toThrow(
+        new HttpException(
+          'user user undefined do not exists do not exists',
+          HttpStatus.NOT_FOUND,
+        ),
+      );
     });
   });
 

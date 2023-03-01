@@ -171,7 +171,7 @@ describe('DentistServicesController', () => {
   });
 
   describe('PUT /:id', () => {
-    it('should ', async () => {
+    it('should return success message when service was updated', async () => {
       // CONFIGURATION
       const serviceId = faker.datatype.uuid();
       const successMessage = `Service ${serviceId} was updated correctly`;

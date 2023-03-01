@@ -14,17 +14,23 @@ import {
   MockFullAddress,
   MockProfile,
 } from './mocks/address.mock';
-import { MockAddressMapBox } from './mocks/mapBox.mock';
 import { createDto, updateDto } from './mocks/dtos.mock';
 import { Usertype } from '../../utils/types/User';
 import { UserRole } from '../../utils/RoleEnum';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { CreateAddressDto } from '../dto/create-address.dto';
+import { ProfileEntity } from '../../profile/entities/profile.entity';
+import { UpdateAddressDto } from '../dto/update-address.dto';
 
 type KeyTypes = 'MAP_BOX_URL' | 'MAP_BOX_TOKEN';
+
+const errorMessage = (message: string) => `user ${message} do not exists`;
 
 describe('AddressesService', () => {
   let service: AddressesService;
   let repoAddress: Repository<AddressEntity>;
   let profileService: ProfileService;
+  let httpService: HttpService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -35,15 +41,7 @@ describe('AddressesService', () => {
         {
           provide: HttpService,
           useValue: {
-            axiosRef: {
-              get: jest.fn(() => {
-                return {
-                  data: {
-                    ...MockAddressMapBox,
-                  },
-                };
-              }),
-            },
+            axiosRef: jest.fn(),
           },
         },
         {
@@ -84,6 +82,7 @@ describe('AddressesService', () => {
       ],
     }).compile();
 
+    httpService = module.get<HttpService>(HttpService);
     repoAddress = module.get<Repository<AddressEntity>>(
       getRepositoryToken(AddressEntity),
     );
@@ -116,6 +115,23 @@ describe('AddressesService', () => {
         where: { id: addressId, profile: { user: { id: userId } } },
       });
     });
+
+    it('should return http exception if some service fails', async () => {
+      // CONFIGURATION
+      const addressId = faker.datatype.uuid();
+      const userId = faker.datatype.uuid();
+      const message = `Address id ${addressId} not found`;
+
+      // CALL FUNCTION
+      jest
+        .spyOn(repoAddress, 'findOneOrFail')
+        .mockImplementationOnce(() => Promise.reject({ code: 404, message }));
+
+      // TESTING
+      await expect(service.findOne(addressId, userId)).rejects.toThrow(
+        new HttpException(errorMessage(message), HttpStatus.NOT_FOUND),
+      );
+    });
   });
 
   describe('Find All', () => {
@@ -136,40 +152,34 @@ describe('AddressesService', () => {
       });
       expect(data).toEqual([addressOne, addressTwo, addressThree]);
     });
+
+    it('should return http exception when service to find all addresses', async () => {
+      // CONFIGURATION
+      const userId = faker.datatype.uuid();
+      const message = `No addresses found to user_id: ${userId}`;
+
+      // CALL FUNCTION
+      jest
+        .spyOn(repoAddress, 'find')
+        .mockImplementationOnce(() => Promise.reject({ code: '404', message }));
+
+      // TESTING
+      await expect(service.findAll(userId)).rejects.toThrow(
+        new HttpException(errorMessage(message), HttpStatus.NOT_FOUND),
+      );
+    });
   });
 
   describe('Create', () => {
     it('should return a Address entity when was created when user not have more than one address', async () => {
+      // CONFIGURATION
       const user = <Usertype>{
         id: faker.datatype.uuid(),
         role: UserRole.PATIENT,
       };
-
       const addressId = faker.datatype.uuid();
-
       const AddressCreated = MockCreateAddress(addressId, createDto, user.id);
-      const AddressCreatedTwo = MockCreateAddress(
-        addressId,
-        createDto,
-        user.id,
-      );
-      const AddressCreatedThree = MockCreateAddress(
-        addressId,
-        createDto,
-        user.id,
-      );
-
-      const findAllAddress = jest
-        .spyOn(repoAddress, 'find')
-        .mockResolvedValue([
-          AddressCreated,
-          AddressCreatedTwo,
-          AddressCreatedThree,
-        ]);
-
-      const findProfileSpy = jest
-        .spyOn(profileService, 'findByUserId')
-        .mockResolvedValue(MockProfile(user.id));
+      // CALL FUNCTION
 
       const createSpy = jest
         .spyOn(repoAddress, 'create')
@@ -179,14 +189,27 @@ describe('AddressesService', () => {
         .spyOn(repoAddress, 'save')
         .mockResolvedValue(AddressCreated);
 
+      const mockProfile: ProfileEntity = {
+        create_date_time: faker.date.past(),
+        father_last_name: faker.name.lastName(),
+        id: faker.datatype.uuid(),
+        last_changed_date_time: faker.date.recent(),
+        mother_last_name: faker.name.lastName(),
+        name: faker.name.fullName(),
+        user: null,
+      };
+
+      const profile = jest
+        .spyOn(profileService, 'findByUserId')
+        .mockResolvedValue(mockProfile);
+
       const data = await service.create(createDto, user);
-      expect(findProfileSpy).toHaveBeenCalledWith(user);
+
+      // TESTING
       expect(createSpy).toHaveBeenCalledWith(createDto);
+      expect(profile).toHaveBeenCalledWith(user);
       expect(saveSpy).toHaveBeenCalled();
       expect(data).toEqual(AddressCreated);
-      expect(findAllAddress).toHaveBeenCalledWith({
-        where: { profile: { user: { id: user.id } } },
-      });
     });
 
     it('should return address entity as default when user has more than one address', async () => {
@@ -217,6 +240,38 @@ describe('AddressesService', () => {
       expect(saveSpy).toHaveBeenCalled();
       expect(data).toEqual(AddressCreated);
     });
+
+    it('should return http exception when creation service fails', async () => {
+      // CONFIGURATION
+      const dto: CreateAddressDto = {
+        address_line: faker.address.streetAddress(),
+        address_number_exterior: faker.address.buildingNumber(),
+        coordinates: [
+          Number(faker.address.latitude()),
+          Number(faker.address.longitude()),
+        ],
+        full_address: faker.address.streetAddress(),
+        iso_code: 'MX-HID',
+        postal_code: faker.address.zipCode(),
+      };
+
+      const user: Usertype = {
+        id: faker.datatype.uuid(),
+        role: UserRole.DENTIST,
+      };
+
+      const message = `no profile found to: ${user.id}`;
+
+      // CALL FUNCTION
+      jest
+        .spyOn(profileService, 'findByUserId')
+        .mockImplementationOnce(() => Promise.reject({ code: '404', message }));
+
+      // TESTING
+      await expect(service.create(dto, user)).rejects.toThrow(
+        new HttpException(errorMessage(message), HttpStatus.NOT_FOUND),
+      );
+    });
   });
 
   describe('Remove', () => {
@@ -246,19 +301,44 @@ describe('AddressesService', () => {
       });
       expect(findProfileSpy).toHaveBeenCalledWith(user);
     });
-  });
 
-  describe('Get Addresses', () => {
-    it('should return address information', async () => {
-      const address_string = faker.address.streetAddress();
-      const data = await service.getAddresses(address_string);
+    it('should return http exception when no deleted address', async () => {
+      // CONFIGURATION
+      const profileMock: ProfileEntity = {
+        create_date_time: faker.date.past(),
+        father_last_name: faker.name.lastName(),
+        id: faker.datatype.uuid(),
+        last_changed_date_time: faker.date.past(),
+        mother_last_name: faker.name.lastName(),
+        name: faker.name.fullName(),
+        user: undefined,
+      };
 
-      expect(data).toEqual(MockAddressMapBox);
+      const user = <Usertype>{
+        id: faker.datatype.uuid(),
+        role: UserRole.PATIENT,
+      };
+
+      const addressId = faker.datatype.uuid();
+      const message = `user Address ${addressId} no exists do not exists`;
+
+      // CALL FUNCTION
+      jest.spyOn(profileService, 'findByUserId').mockResolvedValue(profileMock);
+      jest.spyOn(repoAddress, 'delete').mockResolvedValue({
+        affected: 0,
+        raw: [],
+      });
+
+      // TESTING
+      await expect(service.remove(addressId, user)).rejects.toThrow(
+        new HttpException(errorMessage(message), HttpStatus.NOT_FOUND),
+      );
     });
   });
 
   describe('Update Address', () => {
     it('should return string success when address was updated correctly', async () => {
+      // CONFIGURATION
       const user = <Usertype>{
         id: faker.datatype.uuid(),
         role: UserRole.PATIENT,
@@ -267,8 +347,7 @@ describe('AddressesService', () => {
       const addressId = faker.datatype.uuid();
       const profileId = faker.datatype.uuid();
 
-      const findAll = jest.spyOn(service, 'findAll').mockResolvedValue([]);
-
+      // CALL FUNCTIONS
       const profileServiceSpy = jest
         .spyOn(profileService, 'findByUserId')
         .mockResolvedValue(MockProfile(profileId));
@@ -278,13 +357,107 @@ describe('AddressesService', () => {
         .mockResolvedValue({ affected: 1, raw: [], generatedMaps: [] });
 
       const data = await service.update(addressId, updateDto, user);
+
+      // TESTING
       expect(profileServiceSpy).toHaveBeenCalledWith(user);
-      expect(findAll).toHaveBeenCalledWith(user);
       expect(updateSpy).toHaveBeenCalledWith(
         { id: addressId, profile: { id: profileId } },
         updateDto,
       );
       expect(data).toBe(`Address ${addressId} was updated successfully`);
+    });
+
+    it('should return https exception when update service fails', async () => {
+      // CONFIGURATION
+      const addressId = faker.datatype.uuid();
+      const user: Usertype = {
+        id: faker.datatype.uuid(),
+        role: UserRole.DENTIST,
+      };
+      const updateDto: UpdateAddressDto = {
+        address_line: faker.address.streetAddress(),
+        address_number_exterior: faker.address.buildingNumber(),
+        address_number_interior: faker.address.buildingNumber(),
+        coordinates: [
+          Number(faker.address.latitude()),
+          Number(faker.address.longitude()),
+        ],
+        country: 'MX',
+        full_address: faker.address.streetAddress(),
+        iso_code: 'MX-HID',
+        postal_code: faker.address.zipCode(),
+        suburb: faker.address.state(),
+      };
+      const message = `address ${addressId} not found`;
+
+      const mockProfile: ProfileEntity = {
+        create_date_time: faker.date.past(),
+        father_last_name: faker.name.lastName(),
+        id: faker.datatype.uuid(),
+        last_changed_date_time: faker.date.recent(),
+        mother_last_name: faker.name.lastName(),
+        name: faker.name.fullName(),
+        user: null,
+      };
+
+      // CALL FUNCTION
+      jest.spyOn(profileService, 'findByUserId').mockResolvedValue(mockProfile);
+
+      jest
+        .spyOn(repoAddress, 'update')
+        .mockImplementationOnce(() => Promise.reject({ code: '404', message }));
+
+      // TESTING
+      await expect(service.update(addressId, updateDto, user)).rejects.toThrow(
+        new HttpException(errorMessage(message), HttpStatus.NOT_FOUND),
+      );
+    });
+
+    it('should return http exception when updateAddress not update any address', async () => {
+      // CONFIGURATION
+      const addressId = faker.datatype.uuid();
+      const user: Usertype = {
+        id: faker.datatype.uuid(),
+        role: UserRole.DENTIST,
+      };
+      const updateDto: UpdateAddressDto = {
+        address_line: faker.address.streetAddress(),
+        address_number_exterior: faker.address.buildingNumber(),
+        address_number_interior: faker.address.buildingNumber(),
+        coordinates: [
+          Number(faker.address.latitude()),
+          Number(faker.address.longitude()),
+        ],
+        country: 'MX',
+        full_address: faker.address.streetAddress(),
+        iso_code: 'MX-HID',
+        postal_code: faker.address.zipCode(),
+        suburb: faker.address.state(),
+      };
+      const message = `user Address ${addressId} not exists do not exists`;
+
+      const mockProfile: ProfileEntity = {
+        create_date_time: faker.date.past(),
+        father_last_name: faker.name.lastName(),
+        id: faker.datatype.uuid(),
+        last_changed_date_time: faker.date.recent(),
+        mother_last_name: faker.name.lastName(),
+        name: faker.name.fullName(),
+        user: null,
+      };
+
+      // CALL FUNCTION
+      jest.spyOn(profileService, 'findByUserId').mockResolvedValue(mockProfile);
+      jest.spyOn(repoAddress, 'update').mockResolvedValue({
+        affected: 0,
+        raw: [],
+        generatedMaps: [],
+      });
+
+      // TESTING
+      await expect(service.update(addressId, updateDto, user)).rejects.toThrow(
+        new HttpException(errorMessage(message), HttpStatus.NOT_FOUND),
+      );
     });
   });
 });

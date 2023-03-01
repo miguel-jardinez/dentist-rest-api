@@ -115,9 +115,13 @@ export class AddressesService {
     url.searchParams.append('language', mapBoxLanguage);
     url.searchParams.append('access_token', mapBoxToken);
 
-    const data = await this.httpService.axiosRef.get<AddressType>(
-      url.toString(),
-    );
+    const data = await this.httpService.axiosRef<AddressType>({
+      url: url.toString(),
+      method: 'GET',
+    });
+
+    console.log({ data });
+
     return data.data;
   }
 
@@ -141,9 +145,10 @@ export class AddressesService {
     url.searchParams.append('steps', 'true');
     url.searchParams.append('access_token', mapBoxToken);
 
-    const data = await this.httpService.axiosRef.get<DirectionsTypesResponse>(
-      url.toString(),
-    );
+    const data = await this.httpService.axiosRef<DirectionsTypesResponse>({
+      url: url.toString(),
+      method: 'GET',
+    });
 
     return data.data;
   }
