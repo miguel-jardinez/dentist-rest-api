@@ -29,22 +29,22 @@ export class PatientRelativesFormEntity implements RelativeFormInterface {
   relative_has_heart_disease: boolean;
 
   @Column({ type: 'simple-array', enum: RelativesEnum, nullable: true })
-  relative_with_asthma: RelativesEnum[];
+  relative_with_asthma?: RelativesEnum[];
 
   @Column({ type: 'simple-array', enum: RelativesEnum, nullable: true })
-  relative_with_cancer: RelativesEnum[];
+  relative_with_cancer?: RelativesEnum[];
 
   @Column({ type: 'simple-array', enum: RelativesEnum, nullable: true })
-  relative_with_diabetes: RelativesEnum[];
+  relative_with_diabetes?: RelativesEnum[];
 
   @Column({ type: 'simple-array', enum: RelativesEnum, nullable: true })
-  relative_with_hearth_disease: RelativesEnum[];
+  relative_with_hearth_disease?: RelativesEnum[];
 
   @Column('boolean')
   relatives_has_respiratory_diseases: boolean;
 
   @Column('boolean', { nullable: true })
-  relative_with_respiratory_diseases: RelativesEnum[];
+  relative_with_respiratory_diseases?: RelativesEnum[];
 
   @Column('text', { nullable: true })
   relatives_additional_comments?: string;

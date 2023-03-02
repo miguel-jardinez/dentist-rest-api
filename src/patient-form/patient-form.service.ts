@@ -42,7 +42,7 @@ export class PatientFormService implements InterfaceFormService {
       return data;
     } catch (e) {
       this.logger.error(`Personal form was not created to user_id: ${user.id}`);
-      this.errorService.errorHandling('404', e.message);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 
@@ -67,7 +67,7 @@ export class PatientFormService implements InterfaceFormService {
       this.logger.error(
         `Relatives form was not created to user_id: ${user.id}`,
       );
-      this.errorService.errorHandling('404', e.message);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 
@@ -140,7 +140,7 @@ export class PatientFormService implements InterfaceFormService {
       this.logger.error(
         `Personal form was not updated form_id: ${formId} to user_id: ${userId}`,
       );
-      this.errorService.errorHandling('404', e.mssage);
+      this.errorService.errorHandling('404', e.message);
     }
   }
 
@@ -173,7 +173,7 @@ export class PatientFormService implements InterfaceFormService {
       this.logger.error(
         `Relatives form was not updated form_id: ${formId} to user_id: ${userId}`,
       );
-      this.errorService.errorHandling('404', e.mssage);
+      this.errorService.errorHandling('404', e.message);
     }
   }
 }
