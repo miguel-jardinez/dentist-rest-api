@@ -482,7 +482,9 @@ describe('PatientFormService', () => {
         // CALL FUNCTION
         jest
           .spyOn(relativeRepo, 'update')
-          .mockImplementationOnce(() => Promise.reject({ code: 404, message }));
+          .mockImplementationOnce(() =>
+            Promise.reject({ code: '404', message }),
+          );
 
         // TESTING
         await expect(
@@ -490,6 +492,26 @@ describe('PatientFormService', () => {
         ).rejects.toThrow(
           new HttpException(
             `user ${message} do not exists`,
+            HttpStatus.NOT_FOUND,
+          ),
+        );
+      });
+
+      it('should return http exception when update services return 0', async () => {
+        // CONFIGURATION
+        // CALL FUNCTIONS
+        jest.spyOn(relativeRepo, 'update').mockResolvedValue({
+          affected: 0,
+          raw: [],
+          generatedMaps: [],
+        });
+
+        // TESTING
+        await expect(
+          service.updateRelativeForm(user.id, formId, updateDto),
+        ).rejects.toThrow(
+          new HttpException(
+            'Please contact service care or try again',
             HttpStatus.NOT_FOUND,
           ),
         );

@@ -173,7 +173,7 @@ export class PatientFormService implements InterfaceFormService {
       this.logger.error(
         `Relatives form was not updated form_id: ${formId} to user_id: ${userId}`,
       );
-      this.errorService.errorHandling('404', e.message);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 }
