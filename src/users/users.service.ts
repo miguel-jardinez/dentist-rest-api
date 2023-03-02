@@ -18,16 +18,15 @@ export class UsersService implements UserServiceInterface {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const user = this.user.create(createUserDto);
     try {
+      const user = this.user.create(createUserDto);
       return await this.user.save<UserEntity>(user);
     } catch (e) {
-      console.log(e);
-      this.errorService.errorHandling(e.code, user.email);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 
-  findAll(): Promise<UserEntity[]> {
+  public findAll(): Promise<UserEntity[]> {
     return this.user.find({ relations: { profile: true } });
   }
 
@@ -38,7 +37,6 @@ export class UsersService implements UserServiceInterface {
         relations: { profile: true },
       });
     } catch (e) {
-      console.log(e);
       this.errorService.errorHandling('u-404', e.message);
     }
   }
@@ -51,8 +49,7 @@ export class UsersService implements UserServiceInterface {
       }
       return this.errorService.errorHandling('u-404', id);
     } catch (e) {
-      console.log(e);
-      this.errorService.errorHandling(e.status.toString(), e.response);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 
@@ -60,7 +57,7 @@ export class UsersService implements UserServiceInterface {
     try {
       return await this.user.findOne({ where: { email } });
     } catch (e) {
-      this.errorService.errorHandling(e.status.string(), e.response);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 
@@ -80,7 +77,7 @@ export class UsersService implements UserServiceInterface {
         },
       });
     } catch (e) {
-      this.errorService.errorHandling(e.status.string(), e.response);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 
@@ -100,7 +97,7 @@ export class UsersService implements UserServiceInterface {
         },
       });
     } catch (e) {
-      this.errorService.errorHandling(e.status.string(), e.response);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 }
