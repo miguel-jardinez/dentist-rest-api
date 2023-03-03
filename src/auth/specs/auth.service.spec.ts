@@ -12,6 +12,13 @@ import { Repository } from 'typeorm';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { UserRole } from '../../utils/RoleEnum';
 import { CreateUserDto } from '../../users/dto/create-user.dto';
+import { createMock } from '@golevelup/ts-jest';
+import { LoginAuthDto } from '../dto/login-auth.dto';
+import * as argon from 'argon2';
+
+jest.mock('argon2', () => ({
+  verify: jest.fn(),
+}));
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -25,11 +32,7 @@ describe('AuthService', () => {
       providers: [
         {
           provide: getRepositoryToken(UserEntity),
-          useValue: {
-            findOne: jest.fn(),
-            create: jest.fn(),
-            save: jest.fn(),
-          },
+          useValue: createMock<UserEntity>(),
         },
         AuthService,
         UsersService,
@@ -58,25 +61,57 @@ describe('AuthService', () => {
 
   describe('ValidUserWithCredentials', () => {
     it('should return user when credentials are correct', async () => {
+      // CONFIGURATION
+      const login: LoginAuthDto = {
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      };
+
+      // CALL FUNCTIONS
       const userSpy = jest
         .spyOn(userService, 'findByEmail')
         .mockResolvedValue(UserMock);
 
-      const checkPassword = jest
-        .spyOn(authService, <any>'validateUserPassword')
-        .mockResolvedValue(true);
+      const spyVerified = jest.spyOn(argon, 'verify').mockResolvedValue(true);
 
-      const data = await authService.validateUserCredentials(
-        UserMock.email,
+      const data = await authService.validateUserCredentials(login);
+
+      // TESTING
+      expect(spyVerified).toHaveBeenCalledWith(
         UserMock.password,
+        login.password,
       );
-
-      expect(checkPassword).toHaveBeenCalled();
       expect(userSpy).toHaveBeenCalled();
       expect(data.id).toBe(UserMock.id);
     });
 
+    it('should return http exception when credentials are wrong', async () => {
+      // CONFIGURATION
+      const login: LoginAuthDto = {
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      };
+      const message = 'email or password incorrect';
+
+      // CALL FUNCTIONS
+      jest.spyOn(userService, 'findByEmail').mockResolvedValue(UserMock);
+
+      jest
+        .spyOn(argon, 'verify')
+        .mockImplementationOnce(() => Promise.reject({ code: '401', message }));
+
+      // TESTING
+      await expect(authService.validateUserCredentials(login)).rejects.toThrow(
+        new HttpException(message, HttpStatus.UNAUTHORIZED),
+      );
+    });
+
     it('Should reject service with error 401 password or username incorrect', async () => {
+      const login: LoginAuthDto = {
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      };
+
       const message = 'email or password incorrect';
 
       jest
@@ -84,7 +119,7 @@ describe('AuthService', () => {
         .mockResolvedValue(false);
 
       await expect(
-        authService.validateUserCredentials(UserMock.email, UserMock.password),
+        authService.validateUserCredentials(login),
       ).rejects.toThrowError(
         new HttpException(message, HttpStatus.UNAUTHORIZED),
       );

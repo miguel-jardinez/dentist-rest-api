@@ -49,8 +49,8 @@ export class WorkingHoursService implements InterfaceMethods {
 
       return dataDay;
     } catch (e) {
-      this.errorService.errorHandling(e.code, e.message);
       this.logger.error(`Error creating working error to user_id:${user.id}`);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 

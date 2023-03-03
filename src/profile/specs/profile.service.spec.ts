@@ -48,6 +48,7 @@ describe('ProfileService', () => {
 
   describe('FindUserById', () => {
     it('should return userEntity where id was passed', async () => {
+      const mockId = faker.datatype.uuid();
       const user = <Usertype>{
         id: faker.datatype.uuid(),
         role: UserRole.PATIENT,
@@ -57,7 +58,7 @@ describe('ProfileService', () => {
         name: faker.name.fullName(),
         mother_last_name: faker.name.lastName(),
         phone_number: faker.phone.number(),
-        id: faker.datatype.uuid(),
+        id: mockId,
         user: null,
         address: null,
       } as ProfileEntity);
@@ -65,11 +66,12 @@ describe('ProfileService', () => {
       const data = await service.findByUserId(user);
 
       expect(jestSpy).toBeCalled();
-      expect(data.id).toBe('mock_id');
+      expect(data.id).toBe(mockId);
     });
 
     it('should call error service if repository fire error', async () => {
-      const errorText = 'user User was not found do not exists';
+      const errorText =
+        'user Profile not found please create one first do not exists';
 
       const errorSpy = jest.spyOn(errorService, 'errorHandling');
       const jestSpy = jest.spyOn(repo, 'findOneOrFail').mockRejectedValue({
