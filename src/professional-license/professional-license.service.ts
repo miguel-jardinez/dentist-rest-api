@@ -48,7 +48,7 @@ export class ProfessionalLicenseService implements InterfaceService {
       };
 
       const dataItemLicense = await this.getProfessionalLicense(argsLicense);
-      const isValidLicense = this.compareLicense(
+      const isValidLicense = await this.compareLicense(
         user,
         createLicense.id_license,
         dataItemLicense,
@@ -161,7 +161,7 @@ export class ProfessionalLicenseService implements InterfaceService {
         (license) => license.idCedula === getLicenseDto.idCedula,
       );
 
-      if (license === null) {
+      if (!license) {
         this.logger.error(
           `Failed to fetch professional license number ${getLicenseDto.idCedula}`,
         );
