@@ -104,6 +104,7 @@
       "jestGlobalMocks.ts",
       ".module.ts",
       ".mock.ts",
+      "entity.ts",
       "main.ts"
     ],
     "coverageDirectory": "../coverage",

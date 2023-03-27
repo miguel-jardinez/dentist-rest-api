@@ -36,7 +36,7 @@ export class ProfileService implements ProfileServiceInterface {
       await this.profileRepository.save(profileObject);
       return `Profile added Successfully`;
     } catch (e) {
-      console.log(e);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 

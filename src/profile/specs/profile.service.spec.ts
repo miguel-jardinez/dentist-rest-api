@@ -144,5 +144,30 @@ describe('ProfileService', () => {
       expect(saveSpy).toHaveBeenCalled();
       expect(data).toBe('Profile added Successfully');
     });
+
+    it('should return http exception when save service fails', async () => {
+      // CONFIGURATION
+      const CreateProfileDto: CreateProfileDto = {
+        name: faker.name.fullName(),
+        father_last_name: faker.name.lastName(),
+        mother_last_name: faker.name.lastName(),
+        phone_number: faker.phone.number(),
+      };
+
+      // CALL FUNCTION
+      jest.spyOn(repo, 'create');
+      jest
+        .spyOn(repo, 'save')
+        .mockImplementationOnce(() =>
+          Promise.reject({ code: '23505', message: 'error message' }),
+        );
+
+      // TEST FUNCTION
+      await expect(
+        service.create(CreateProfileDto, 'mock_user_id'),
+      ).rejects.toThrow(
+        new HttpException('error message', HttpStatus.CONFLICT),
+      );
+    });
   });
 });
