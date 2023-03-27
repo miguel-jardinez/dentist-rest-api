@@ -6,6 +6,7 @@ import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { ErrorService } from '../utils/ErrorService';
 import { UserServiceInterface } from './interfaces/UserService.interface';
+import { UserRole } from '../utils/RoleEnum';
 
 @Injectable()
 export class UsersService implements UserServiceInterface {
@@ -17,16 +18,15 @@ export class UsersService implements UserServiceInterface {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const user = this.user.create(createUserDto);
     try {
+      const user = this.user.create(createUserDto);
       return await this.user.save<UserEntity>(user);
     } catch (e) {
-      console.log(e);
-      this.errorService.errorHandling(e.code, user.email);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 
-  findAll(): Promise<UserEntity[]> {
+  public findAll(): Promise<UserEntity[]> {
     return this.user.find({ relations: { profile: true } });
   }
 
@@ -37,7 +37,6 @@ export class UsersService implements UserServiceInterface {
         relations: { profile: true },
       });
     } catch (e) {
-      console.log(e);
       this.errorService.errorHandling('u-404', e.message);
     }
   }
@@ -50,8 +49,7 @@ export class UsersService implements UserServiceInterface {
       }
       return this.errorService.errorHandling('u-404', id);
     } catch (e) {
-      console.log(e);
-      this.errorService.errorHandling(e.status.toString(), e.response);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 
@@ -59,7 +57,47 @@ export class UsersService implements UserServiceInterface {
     try {
       return await this.user.findOne({ where: { email } });
     } catch (e) {
-      this.errorService.errorHandling(e.status.string(), e.response);
+      this.errorService.errorHandling(e.code, e.message);
+    }
+  }
+
+  public async findDentistByRegion(region: string): Promise<UserEntity[]> {
+    try {
+      return await this.user.find({
+        where: {
+          role: UserRole.DENTIST,
+          profile: { address: { iso_code: region } },
+        },
+        relations: {
+          profile: {
+            services: true,
+            address: true,
+            license: true,
+          },
+        },
+      });
+    } catch (e) {
+      this.errorService.errorHandling(e.code, e.message);
+    }
+  }
+
+  public async findDentistById(id): Promise<UserEntity> {
+    try {
+      return await this.user.findOneOrFail({
+        where: {
+          role: UserRole.DENTIST,
+          id,
+        },
+        relations: {
+          profile: {
+            services: true,
+            address: true,
+            license: true,
+          },
+        },
+      });
+    } catch (e) {
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 }

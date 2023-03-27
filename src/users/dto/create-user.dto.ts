@@ -11,9 +11,6 @@ export class CreateUserDto implements UserModel {
   password: string;
 
   @IsString()
-  username: string;
-
-  @IsString()
   @IsEnum(UserRole, { each: true })
   role: UserRole;
 }

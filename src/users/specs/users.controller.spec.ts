@@ -3,6 +3,7 @@ import { UsersService } from '../users.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserRole } from '../../utils/RoleEnum';
 import { MockUserService } from './mocks/MockUserService';
+import { LIST_USERS_MOCK } from './mocks/mocks';
 
 const MOCK_ID = 'mock_id';
 
@@ -37,13 +38,7 @@ describe('UserController', () => {
       const data = await userController.findAll();
 
       expect(serviceSpy).toHaveBeenCalled();
-      expect(data[0]).toEqual({
-        id: 'id_mock_1',
-        username: 'test_username_1',
-        password: 'test_password_1',
-        email: 'test@email.com_1',
-        role: UserRole.DENTIST,
-      });
+      expect(data[0]).toEqual(LIST_USERS_MOCK[0]);
     });
   });
 

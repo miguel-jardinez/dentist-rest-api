@@ -1,42 +1,49 @@
 import { UserModel } from '../../types/UserModel';
 import { UserRole } from '../../../utils/RoleEnum';
 import { CreateUserDto } from '../../dto/create-user.dto';
+import { UserEntity } from '../../entities/user.entity';
+import { faker } from '@faker-js/faker';
 
 export const EMAIL_MOCK = 'test@email.com';
 export const PASSWORD_MOCK = 'test_password';
 export const USERNAME_MOCK = 'test_username';
 export const ID_MOCK = 'id_mock';
 
-export const LIST_USERS_MOCK: UserModel[] = [
+export const LIST_USERS_MOCK: UserEntity[] = [
   {
-    id: `${ID_MOCK}_1`,
-    username: `${USERNAME_MOCK}_1`,
-    password: `${PASSWORD_MOCK}_1`,
-    email: `${EMAIL_MOCK}_1`,
+    id: faker.datatype.uuid(),
+    password: faker.internet.password(),
     role: UserRole.DENTIST,
+    email: faker.internet.email(),
+    is_email_verified: true,
+    is_phone_verified: true,
+    is_active: true,
+    create_date_time: faker.date.past(),
+    last_changed_date_time: faker.date.recent(),
   },
   {
-    id: `${ID_MOCK}_2`,
-    username: `${USERNAME_MOCK}_2`,
-    password: `${PASSWORD_MOCK}_2`,
-    email: `${EMAIL_MOCK}_2`,
-    role: UserRole.PATIENT,
-  },
-  {
-    id: `${ID_MOCK}_3`,
-    username: `${USERNAME_MOCK}_3`,
-    password: `${PASSWORD_MOCK}_3`,
-    email: `${EMAIL_MOCK}_3`,
-    role: UserRole.PATIENT,
+    id: faker.datatype.uuid(),
+    password: faker.internet.password(),
+    role: UserRole.DENTIST,
+    email: faker.internet.email(),
+    is_email_verified: true,
+    is_phone_verified: true,
+    is_active: true,
+    create_date_time: faker.date.past(),
+    last_changed_date_time: faker.date.recent(),
   },
 ];
 
-export const OneUserMockId = (id: string): UserModel => {
+export const OneUserMockId = (id: string): UserEntity => {
   return {
     id,
-    email: EMAIL_MOCK,
-    password: PASSWORD_MOCK,
-    username: USERNAME_MOCK,
+    create_date_time: faker.date.past(),
+    is_active: false,
+    is_email_verified: false,
+    is_phone_verified: false,
+    last_changed_date_time: faker.date.recent(),
+    email: faker.internet.email(),
+    password: faker.internet.password(),
     role: UserRole.PATIENT,
   };
 };
@@ -49,13 +56,17 @@ export const OneUserMockIdService = {
   role: UserRole.DENTIST,
 };
 
-export const OneUserMockEmail = (email): UserModel => {
+export const OneUserMockEmail = (email: string): UserEntity => {
   return {
-    id: ID_MOCK,
-    email,
-    password: PASSWORD_MOCK,
-    username: USERNAME_MOCK,
-    role: UserRole.DENTIST,
+    id: faker.datatype.uuid(),
+    create_date_time: faker.date.past(),
+    is_active: false,
+    is_email_verified: false,
+    is_phone_verified: false,
+    last_changed_date_time: faker.date.recent(),
+    email: email,
+    password: faker.internet.password(),
+    role: UserRole.PATIENT,
   };
 };
 
@@ -67,10 +78,16 @@ export const OneUserMockEmailService = {
   role: UserRole.DENTIST,
 };
 
-export const InsertUserMock = (user: CreateUserDto) => {
+export const InsertUserMock = (user: CreateUserDto): UserEntity => {
   return {
     ...user,
     id: ID_MOCK,
+    is_phone_verified: true,
+    is_email_verified: true,
+    is_active: true,
+    profile: null,
+    last_changed_date_time: faker.date.recent(),
+    create_date_time: faker.date.past(),
   };
 };
 

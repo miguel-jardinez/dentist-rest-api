@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Repository } from 'typeorm';
 import { ProfileEntity } from './entities/profile.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorService } from '../utils/ErrorService';
+import { Usertype } from '../utils/types/User';
 
 interface ProfileServiceInterface {
   create(createProfileDto: CreateProfileDto, id: string): Promise<string>;
@@ -13,6 +14,8 @@ interface ProfileServiceInterface {
 
 @Injectable()
 export class ProfileService implements ProfileServiceInterface {
+  private readonly logger = new Logger(ProfileService.name);
+
   constructor(
     @InjectRepository(ProfileEntity)
     private readonly profileRepository: Repository<ProfileEntity>,
@@ -33,7 +36,7 @@ export class ProfileService implements ProfileServiceInterface {
       await this.profileRepository.save(profileObject);
       return `Profile added Successfully`;
     } catch (e) {
-      console.log(e);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 
@@ -53,13 +56,34 @@ export class ProfileService implements ProfileServiceInterface {
     return `User ${id} has been updated successfully`;
   }
 
-  async findByUserId(id): Promise<ProfileEntity> {
+  async findByUserId(user: Usertype): Promise<ProfileEntity> {
     try {
+      const isPatient = user.role === 'PATIENT';
+
       return await this.profileRepository.findOneOrFail({
-        where: { user: { id } },
+        where: { user: { id: user.id } },
+        relations: {
+          user: true,
+          address: true,
+          personal_form: isPatient,
+          relatives_form: isPatient,
+          working_days: {
+            hours: !isPatient,
+          },
+          services: {
+            amount: !isPatient,
+          },
+          license: !isPatient,
+        },
       });
     } catch (e) {
-      this.errorService.errorHandling('404', e.message);
+      this.logger.log(
+        `Profile with id: ${user.id} not found please create one`,
+      );
+      this.errorService.errorHandling(
+        '404',
+        'Profile not found please create one first',
+      );
     }
   }
 }

@@ -6,6 +6,7 @@ import { ErrorService } from '../utils/ErrorService';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserRole } from '../utils/RoleEnum';
+import { LoginAuthDto } from './dto/login-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,14 +21,13 @@ export class AuthService {
   }
 
   public async validateUserCredentials(
-    email: string,
-    password: string,
+    login: LoginAuthDto,
   ): Promise<UserEntity> {
     try {
-      const user = await this.userService.findByEmail(email);
+      const user = await this.userService.findByEmail(login.email);
 
       const isPasswordValid = await this.validateUserPassword(
-        password,
+        login.password,
         user.password,
       );
 

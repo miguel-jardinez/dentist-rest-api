@@ -16,6 +16,7 @@ import { UserRole } from '../utils/RoleEnum';
 import { RolesAuth } from '../guards/roles/roles.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../guards/roles/roles.guard';
+import { DentistServiceEntity } from './entities/dentist-service.entity';
 
 @Controller('dentists-services')
 @UseGuards(AuthGuard('jwt'))
@@ -28,25 +29,27 @@ export class DentistServicesController {
   @RolesAuth(UserRole.DENTIST)
   @UseGuards(RolesGuard)
   create(@Body() createDentistServiceDto: CreateDentistServiceDto, @Req() req) {
-    const id = req.user.id;
-    return this.dentistServicesService.create(createDentistServiceDto, id);
+    return this.dentistServicesService.create(
+      createDentistServiceDto,
+      req.user,
+    );
   }
 
-  @Get()
+  @Get('/find-all?')
   @RolesAuth(UserRole.DENTIST)
   @UseGuards(RolesGuard)
   findAll(@Req() req) {
     return this.dentistServicesService.findAll(req.user.id);
   }
 
-  @Get(':id')
+  @Get('/find/:id')
   @RolesAuth(UserRole.DENTIST)
   @UseGuards(RolesGuard)
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<DentistServiceEntity> {
     return this.dentistServicesService.findOne(id);
   }
 
-  @Put(':id')
+  @Put('/update/:id')
   @RolesAuth(UserRole.DENTIST)
   @UseGuards(RolesGuard)
   update(
@@ -61,7 +64,7 @@ export class DentistServicesController {
     );
   }
 
-  @Delete(':id')
+  @Delete('/delete/:id')
   @RolesAuth(UserRole.DENTIST)
   @UseGuards(RolesGuard)
   remove(@Param('id') serviceId: string, @Req() req) {

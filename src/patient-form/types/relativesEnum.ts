@@ -1,0 +1,9 @@
+export enum RelativesEnum {
+  FATHER = 'FATHER',
+  MOTHER = 'MOTHER',
+  GRANDMOTHER = 'GRANDMOTHER',
+  GRANDFATHER = 'GRANDFATHER',
+  SISTER = 'SISTER',
+  AUNT = 'AUNT',
+  UNCLE = 'UNCLE',
+}

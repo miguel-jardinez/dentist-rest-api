@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateDentistServiceDto } from './dto/services/create-dentist-service.dto';
 import { UpdateDentistServiceDto } from './dto/services/update-dentist-service.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,21 +6,27 @@ import { Repository } from 'typeorm';
 import { DentistServiceEntity } from './entities/dentist-service.entity';
 import { AmountEntityEntity } from './entities/amount-entity.entity';
 import { ErrorService } from '../utils/ErrorService';
+import { ProfileService } from '../profile/profile.service';
+import { Usertype } from '../utils/types/User';
 
 @Injectable()
 export class DentistServicesService {
+  private readonly logger = new Logger(DentistServiceEntity.name);
   constructor(
     @InjectRepository(DentistServiceEntity)
     private readonly serviceRepository: Repository<DentistServiceEntity>,
     @InjectRepository(AmountEntityEntity)
     private readonly amountRepository: Repository<AmountEntityEntity>,
     private readonly errorService: ErrorService,
+    private readonly profileService: ProfileService,
   ) {}
   async create(
     createDentistServiceDto: CreateDentistServiceDto,
-    id: string,
-  ): Promise<string> {
+    user: Usertype,
+  ): Promise<DentistServiceEntity> {
     try {
+      const profile = await this.profileService.findByUserId(user);
+
       const dataService = {
         name: createDentistServiceDto.name,
         description: createDentistServiceDto.description,
@@ -32,7 +38,7 @@ export class DentistServicesService {
 
       const service = await this.serviceRepository.save({
         ...serviceModel,
-        user: { id },
+        profile: { id: profile.id },
       });
 
       await this.amountRepository.save({
@@ -40,7 +46,9 @@ export class DentistServicesService {
         service: { id: service.id },
       });
 
-      return `Service ${service.name} was created successfully`;
+      this.logger.log(`Service ${service.name} was created successfully`);
+
+      return service;
     } catch (e) {
       this.errorService.errorHandling('404', e.message);
     }
@@ -49,7 +57,7 @@ export class DentistServicesService {
   async findAll(id: string): Promise<DentistServiceEntity[]> {
     try {
       return await this.serviceRepository.find({
-        where: { user: { id } },
+        where: { profile: { user: { id } } },
         relations: { amount: true },
       });
     } catch (e) {
@@ -80,7 +88,7 @@ export class DentistServicesService {
       };
 
       await this.serviceRepository.update(
-        { id: serviceId, user: { id: userId } },
+        { id: serviceId, profile: { user: { id: userId } } },
         dataService,
       );
 
@@ -93,14 +101,13 @@ export class DentistServicesService {
     } catch (e) {
       this.errorService.errorHandling('404', e.message);
     }
-    return `This action updates a #${serviceId} dentistService ${updateDentistServiceDto}`;
   }
 
   async remove(serviceId: string, userId: string): Promise<string> {
     try {
       const deleted = await this.serviceRepository.delete({
         id: serviceId,
-        user: { id: userId },
+        profile: { user: { id: userId } },
       });
 
       if (deleted.affected === 0) {

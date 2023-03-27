@@ -12,9 +12,8 @@ export const createDto: CreateAddressDto = {
   ],
   country: faker.address.country(),
   full_address: faker.address.secondaryAddress(),
-  is_default: false,
   postal_code: faker.address.zipCode(),
-  state: faker.address.state(),
+  iso_code: 'MX-HID',
   suburb: faker.address.state(),
 };
 
@@ -31,7 +30,5 @@ export const updateDto: UpdateAddressDto = {
   address_line: faker.address.streetAddress(),
   address_number_interior: faker.address.buildingNumber(),
   address_number_exterior: faker.address.buildingNumber(),
-  state: faker.address.state(),
-  is_default: true,
   suburb: faker.address.state(),
 };

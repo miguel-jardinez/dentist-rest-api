@@ -76,7 +76,9 @@ describe('AddressesController', () => {
 
       // TESTING
       expect(data).toEqual(AddressResponseMock);
-      expect(spyCreate).toHaveBeenCalledWith(createDto, requestMock.user.id);
+      expect(spyCreate).toHaveBeenCalledWith(createDto, {
+        id: requestMock.user.id,
+      });
     });
   });
 
@@ -130,11 +132,9 @@ describe('AddressesController', () => {
 
       // TESTING
       expect(data).toEqual(successfulMessage);
-      expect(deleteSpy).toHaveBeenCalledWith(
-        addressId,
-        updateDto,
-        requestMock.user.id,
-      );
+      expect(deleteSpy).toHaveBeenCalledWith(addressId, updateDto, {
+        id: requestMock.user.id,
+      });
     });
   });
 
@@ -152,7 +152,9 @@ describe('AddressesController', () => {
 
       // TESTING
       expect(data).toBe(successMessage);
-      expect(deleteSpy).toHaveBeenCalledWith(addressId, requestMock.user.id);
+      expect(deleteSpy).toHaveBeenCalledWith(addressId, {
+        id: requestMock.user.id,
+      });
     });
   });
 });

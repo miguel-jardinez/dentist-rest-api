@@ -19,7 +19,7 @@ export class ErrorService {
         throw new HttpException(details, HttpStatus.UNAUTHORIZED);
 
       case '23505':
-        message = `Email ${details} already exists`;
+        message = `${details}`;
         throw new HttpException(message, HttpStatus.CONFLICT);
 
       default:

@@ -4,6 +4,7 @@ import { Strategy } from 'passport-local';
 import { ErrorService } from '../../utils/ErrorService';
 import { AuthService } from '../auth.service';
 import { UserRole } from '../../utils/RoleEnum';
+import { LoginAuthDto } from '../dto/login-auth.dto';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
@@ -14,15 +15,9 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     super({ usernameField: 'email' });
   }
 
-  async validate(
-    email: string,
-    password: string,
-  ): Promise<{ id: string; role: UserRole }> {
+  async validate(login: LoginAuthDto): Promise<{ id: string; role: UserRole }> {
     try {
-      const user = await this.authService.validateUserCredentials(
-        email,
-        password,
-      );
+      const user = await this.authService.validateUserCredentials(login);
 
       if (user === null) {
         throw new UnauthorizedException();
@@ -30,7 +25,10 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
 
       return { id: user.id, role: user.role };
     } catch (e) {
-      this.errorService.errorHandling('404', `User ${email} was not fonud`);
+      this.errorService.errorHandling(
+        '404',
+        `User ${login.email} was not fonud`,
+      );
     }
   }
 }

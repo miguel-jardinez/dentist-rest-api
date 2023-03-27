@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AmountEntityEntity } from './amount-entity.entity';
-import { UserEntity } from '../../users/entities/user.entity';
+import { ProfileEntity } from '../../profile/entities/profile.entity';
 
 @Entity('dentist_service')
 export class DentistServiceEntity {
@@ -20,15 +20,18 @@ export class DentistServiceEntity {
   @Column('text')
   description: string;
 
+  @Column('boolean', { default: true })
+  is_visible: boolean;
+
   @OneToOne(() => AmountEntityEntity, (amount) => amount.service, {
     cascade: ['remove'],
   })
   amount: AmountEntityEntity;
 
-  @JoinColumn({ name: 'userid' })
-  @ManyToOne(() => UserEntity, (user) => user.services, {
+  @JoinColumn({ name: 'profile_id' })
+  @ManyToOne(() => ProfileEntity, (profile) => profile.services, {
     onDelete: 'CASCADE',
     orphanedRowAction: 'delete',
   })
-  user: UserEntity;
+  profile: ProfileEntity;
 }

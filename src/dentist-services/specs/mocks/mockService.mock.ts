@@ -12,7 +12,8 @@ export const MockDentistService: DentistServiceEntity = {
   description: faker.lorem.paragraph(10),
   id: faker.datatype.uuid(),
   name: faker.name.jobTitle(),
-  user: null,
+  profile: null,
+  is_visible: true,
 };
 
 export const MockAmountService: AmountEntityEntity = {

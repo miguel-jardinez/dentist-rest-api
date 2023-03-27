@@ -7,6 +7,10 @@ import { ProfileModule } from './profile/profile.module';
 import { AuthModule } from './auth/auth.module';
 import { DentistServicesModule } from './dentist-services/dentist-services.module';
 import { AddressesModule } from './addresses/addresses.module';
+import { PatientFormModule } from './patient-form/patient-form.module';
+import { DentistsModule } from './dentists/dentists.module';
+import { ProfessionalLicenseModule } from './professional-license/professional-license.module';
+import { WorkingHoursModule } from './working-hours/working-hours.module';
 
 @Module({
   imports: [
@@ -22,6 +26,10 @@ import { AddressesModule } from './addresses/addresses.module';
     AuthModule,
     DentistServicesModule,
     AddressesModule,
+    PatientFormModule,
+    DentistsModule,
+    ProfessionalLicenseModule,
+    WorkingHoursModule,
   ],
   controllers: [],
   providers: [],
