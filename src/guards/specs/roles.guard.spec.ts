@@ -2,7 +2,7 @@ import { RolesGuard } from '../roles/roles.guard';
 import { Reflector } from '@nestjs/core';
 import { createMock } from '@golevelup/ts-jest';
 import { ExecutionContext } from '@nestjs/common';
-import { UserEntity } from '../../users/entities/user.entity';
+import { UserEntity } from '../../features/users/entities/user.entity';
 import { faker } from '@faker-js/faker';
 import { UserRole } from '../../utils/RoleEnum';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -70,7 +70,7 @@ describe('Roles Guard', () => {
         user: <UserEntity>{
           email: faker.internet.email(),
           password: faker.internet.password(),
-          role: UserRole.PATIENT,
+          role: UserRole.CUSTOMER,
           services: [],
           username: faker.internet.userName(),
           id: faker.datatype.uuid(),

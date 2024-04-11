@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
-type ErrorCodes = '23505' | 'u-404' | '404' | '401';
+type ErrorCodes = '23505' | 'u-404' | '404' | '401' | '502';
 
 @Injectable()
 export class ErrorService {
@@ -21,6 +21,9 @@ export class ErrorService {
       case '23505':
         message = `Email ${details} already exists`;
         throw new HttpException(message, HttpStatus.CONFLICT);
+
+      case '502':
+        throw new HttpException(details, HttpStatus.CONFLICT);
 
       default:
         message = 'Please contact service care or try again';

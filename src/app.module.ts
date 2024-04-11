@@ -1,12 +1,21 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresDbConfigService } from './configuration/PostgressDbConfigService';
-import { ProfileModule } from './profile/profile.module';
-import { AuthModule } from './auth/auth.module';
-import { DentistServicesModule } from './dentist-services/dentist-services.module';
-import { AddressesModule } from './addresses/addresses.module';
+import { CustomerProfileModule } from '@features/customer_profile/customerProfile.module';
+import { UsersModule } from '@features/users/users.module';
+import { AuthModule } from '@features/auth/auth.module';
+import { DentistServicesModule } from '@features/dentist-services/dentist-services.module';
+import { DentistProfileModule } from '@features/dentist_profile/dentist_profile.module';
+import { DentistAddressModule } from '@features/establishment_address/establishment_address.module';
+import { WorkingScheduleModule } from '@features/working_schedule/working_schedule.module';
+import { CustomerEmergencyContactModule } from '@features/customer_emergency_contact/customerEmergencyContact.module';
+import { CustomerPersonalClinicHistoryModule } from '@features/customer_personal_clinic_history/customerPersonalClinicHistory.module';
+import { CustomerFamiliarClinicHistoryModule } from '@features/customer_familiar_clinic_history/customerFamiliarClinicHistory.module';
+import { AppointmentModule } from '@features/appointment/appointment.module';
+import { VitalSignsModule } from '@features/vital_signs/vital_signs.module';
+import { PaymentMethodsModule } from '@features/payment_methods/payment_methods.module';
+import { CustomerAddressModule } from '@features/customer_address/customer-address.module';
 
 @Module({
   imports: [
@@ -18,10 +27,20 @@ import { AddressesModule } from './addresses/addresses.module';
       inject: [PostgresDbConfigService],
     }),
     UsersModule,
-    ProfileModule,
+    CustomerProfileModule,
     AuthModule,
     DentistServicesModule,
-    AddressesModule,
+    DentistProfileModule,
+    DentistAddressModule,
+    WorkingScheduleModule,
+    CustomerEmergencyContactModule,
+    CustomerPersonalClinicHistoryModule,
+    CustomerFamiliarClinicHistoryModule,
+    AppointmentModule,
+    VitalSignsModule,
+    PaymentMethodsModule,
+    AppointmentModule,
+    CustomerAddressModule,
   ],
   controllers: [],
   providers: [],
