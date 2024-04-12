@@ -4,6 +4,7 @@ import { CustomerAddressController } from './customer-address.controller';
 
 @Module({
   controllers: [CustomerAddressController],
-  providers: [CustomerAddressService]
+  providers: [CustomerAddressService],
+  exports: [CustomerAddressService],
 })
 export class CustomerAddressModule {}

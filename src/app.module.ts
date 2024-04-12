@@ -17,6 +17,9 @@ import { VitalSignsModule } from '@features/vital_signs/vital_signs.module';
 import { PaymentMethodsModule } from '@features/payment_methods/payment_methods.module';
 import { CustomerAddressModule } from '@features/customer_address/customer-address.module';
 
+import { EnvConfigModule } from './core/env-config/env-config.module';
+import { MapBoxModule } from '@features/map-box/map-box.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -41,6 +44,8 @@ import { CustomerAddressModule } from '@features/customer_address/customer-addre
     PaymentMethodsModule,
     AppointmentModule,
     CustomerAddressModule,
+    MapBoxModule,
+    EnvConfigModule,
   ],
   controllers: [],
   providers: [],

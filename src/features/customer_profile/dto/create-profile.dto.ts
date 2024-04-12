@@ -1,5 +1,5 @@
 import { CreateCustomerProfileDtoInterface } from '@features/customer_profile/repository/customerProfileDto.interface';
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateProfileDto implements CreateCustomerProfileDtoInterface {
   @IsString()
@@ -14,4 +14,8 @@ export class CreateProfileDto implements CreateCustomerProfileDtoInterface {
   @MaxLength(10)
   @IsOptional()
   phoneNumber: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive: boolean;
 }
