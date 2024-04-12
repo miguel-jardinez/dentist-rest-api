@@ -1,34 +1,67 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { CustomerAddressService } from './customer-address.service';
 import { CreateCustomerAddressDto } from './dto/create-customer-address.dto';
 import { UpdateCustomerAddressDto } from './dto/update-customer-address.dto';
+import {
+  CustomerAddressControllerInterface,
+} from '@features/customer_address/repository/customerAddressController.interface';
+import { RequestUserData } from '@utils/RequestUserData';
+import { ResponseApi } from '@utils/ResponseApi';
+import { CustomerAddressEntity } from '@features/customer_address/entities/customer-address.entity';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesAuth } from '@guards/roles/roles.decorator';
+import { UserRole } from '@utils/RoleEnum';
+import { RolesGuard } from '@guards/roles/roles.guard';
 
-@Controller('customer-address')
-export class CustomerAddressController {
+@Controller('customerAddresses')
+@UseGuards(AuthGuard('jwt'))
+export class CustomerAddressController implements CustomerAddressControllerInterface {
   constructor(private readonly customerAddressService: CustomerAddressService) {}
 
   @Post()
-  create(@Body() createCustomerAddressDto: CreateCustomerAddressDto) {
-    return this.customerAddressService.create(createCustomerAddressDto);
+  @RolesAuth(UserRole.CUSTOMER)
+  @UseGuards(RolesGuard)
+  createCustomerAddress(
+    @Request() request: RequestUserData,
+    @Body() createCustomerAddressDto: CreateCustomerAddressDto
+  ): Promise<ResponseApi<CustomerAddressEntity>> {
+    return this.customerAddressService.createCustomerAddress(request.user.profileId, createCustomerAddressDto)
+  }
+
+  @Delete('/:id')
+  @UseGuards(RolesGuard)
+  @RolesAuth(UserRole.CUSTOMER)
+  deleteCustomerAddress(
+    @Request() request: RequestUserData,
+    @Param('id') addressId: string
+  ): Promise<ResponseApi<DeleteResult>> {
+    return this.customerAddressService.deleteCustomerAddress(request.user.profileId, addressId)
   }
 
   @Get()
-  findAll() {
-    return this.customerAddressService.findAll();
+  @UseGuards(RolesGuard)
+  @RolesAuth(UserRole.CUSTOMER)
+  getAllAddresses(@Request() request: RequestUserData): Promise<ResponseApi<Array<CustomerAddressEntity>>> {
+    return this.customerAddressService.getAllAddresses(request.user.profileId)
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.customerAddressService.findOne(+id);
+  @Get('/:id')
+  @UseGuards(RolesGuard)
+  @RolesAuth(UserRole.CUSTOMER)
+  getOnAddress(@Request() request: RequestUserData, @Param('id') addressId: string): Promise<ResponseApi<CustomerAddressEntity>> {
+    return this.customerAddressService.getOnAddress(request.user.profileId, addressId)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCustomerAddressDto: UpdateCustomerAddressDto) {
-    return this.customerAddressService.update(+id, updateCustomerAddressDto);
+  @Patch('/:id')
+  @UseGuards(RolesGuard)
+  @RolesAuth(UserRole.CUSTOMER)
+  updateAddress(
+    @Request() request: RequestUserData,
+    @Param('id') addressId: string,
+    @Body() updateCustomerAddressDto: UpdateCustomerAddressDto
+  ): Promise<ResponseApi<UpdateResult>> {
+    return this.customerAddressService.updateAddress(request.user.profileId, addressId, updateCustomerAddressDto)
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.customerAddressService.remove(+id);
-  }
 }

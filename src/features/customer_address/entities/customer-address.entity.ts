@@ -8,14 +8,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { CustomerProfileEntity } from '@features/customer_profile/entities/customerProfile.entity';
+import { CustomerAddressModelEntity } from '@features/customer_address/repository/customerAddressModelEntity';
 
 @Entity('customer_address')
-export class CustomerAddressEntity {
+export class CustomerAddressEntity implements CustomerAddressModelEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column('point')
-  coordinates: Array<string>;
 
   @ManyToOne(
     () => CustomerProfileEntity,
@@ -25,8 +23,8 @@ export class CustomerAddressEntity {
   @JoinColumn({ name: 'customer_profile_id' })
   customer: CustomerProfileEntity;
 
-  @Column('text', { name: 'interior_number' })
-  interiorNumber: string;
+  @Column('int', { name: 'interior_number', nullable: true })
+  interiorNumber: number;
 
   @Column('text')
   neighborhood: string;
@@ -34,14 +32,23 @@ export class CustomerAddressEntity {
   @Column('text')
   state: string;
 
+  @Column('text')
+  city: string;
+
+  @Column('varchar')
+  fullAddress: string;
+
+  @Column('varchar')
+  stateCode: string;
+
   @Column('text', { name: 'street_name' })
   streetName: string;
 
-  @Column('text', { name: 'street_number' })
-  streetNumber: string;
+  @Column('int', { name: 'street_number' })
+  streetNumber: number;
 
-  @Column('text', { name: 'zip_code' })
-  zipCode: string;
+  @Column('int', { name: 'zip_code' })
+  zipCode: number;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;
