@@ -5,10 +5,12 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { DentistLicenseEntity } from '@features/dentist-license/entities/dentist-license.entity';
 
 @Entity('dentist_profile')
 export class DentistProfileEntity implements DentistProfileEntityInterface {
@@ -24,11 +26,12 @@ export class DentistProfileEntity implements DentistProfileEntityInterface {
   @Column('varchar', { name: 'last_name', nullable: true })
   lastName: string;
 
-  @Column('varchar', { nullable: true })
-  license: string;
-
-  @Column('varchar', { name: 'license_url', nullable: true })
-  licenceUrl: string;
+  @OneToMany(
+    () => DentistLicenseEntity,
+    (licenseEntity) => licenseEntity.dentistProfile,
+    { nullable: true, onDelete: 'CASCADE' },
+  )
+  license?: DentistLicenseEntity;
 
   @Column('varchar', { nullable: true })
   name: string;
@@ -38,6 +41,7 @@ export class DentistProfileEntity implements DentistProfileEntityInterface {
 
   @OneToOne(() => UserEntity, (userEntity) => userEntity.dentistProfile, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;

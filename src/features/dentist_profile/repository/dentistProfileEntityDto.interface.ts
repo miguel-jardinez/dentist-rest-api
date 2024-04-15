@@ -3,7 +3,5 @@ export interface DentistProfileEntityDtoInterface {
   lastName: string;
   phoneNumber: string;
   avatar: string;
-  license: string;
-  licenceUrl: string;
   isActive: boolean;
 }

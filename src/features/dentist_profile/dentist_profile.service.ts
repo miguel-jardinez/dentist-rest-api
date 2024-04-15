@@ -4,7 +4,7 @@ import { UpdateDentistProfileDto } from './dto/update-dentist_profile.dto';
 import { DentistProfileEntityDtoInterface } from '@features/dentist_profile/repository/dentistProfileEntityService.interface';
 import { ResponseApi } from '@utils/ResponseApi';
 import { DentistProfileEntity } from '@features/dentist_profile/entities/dentist_profile.entity';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { ErrorService } from '@utils/ErrorService';
 import { InjectRepository } from '@nestjs/typeorm';
 

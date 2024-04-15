@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PostgresDbConfigService } from './configuration/PostgressDbConfigService';
 import { CustomerProfileModule } from '@features/customer_profile/customerProfile.module';
 import { UsersModule } from '@features/users/users.module';
 import { AuthModule } from '@features/auth/auth.module';
@@ -16,9 +15,10 @@ import { AppointmentModule } from '@features/appointment/appointment.module';
 import { VitalSignsModule } from '@features/vital_signs/vital_signs.module';
 import { PaymentMethodsModule } from '@features/payment_methods/payment_methods.module';
 import { CustomerAddressModule } from '@features/customer_address/customer-address.module';
-
-import { EnvConfigModule } from './core/env-config/env-config.module';
 import { MapBoxModule } from '@features/map-box/map-box.module';
+import { DentistLicenseModule } from '@features/dentist-license/dentist-license.module';
+import { PostgresDbConfigService } from '@configuration/PostgressDbConfigService';
+import { EnvConfigModule } from '@core/env-config/env-config.module';
 
 @Module({
   imports: [
@@ -46,6 +46,7 @@ import { MapBoxModule } from '@features/map-box/map-box.module';
     CustomerAddressModule,
     MapBoxModule,
     EnvConfigModule,
+    DentistLicenseModule,
   ],
   controllers: [],
   providers: [],

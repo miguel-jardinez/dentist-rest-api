@@ -19,9 +19,10 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@features/*" : ["features/*"],
-      "@configuration/*" : ["features/*"],
+      "@configuration/*" : ["configuration/*"],
       "@guards/*" : ["guards/*"],
       "@utils/*" : ["utils/*"],
+      "@core/*" : ["core/*"],
       "@app/*" : ["src/*"],
     }
   }

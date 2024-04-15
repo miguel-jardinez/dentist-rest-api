@@ -18,14 +18,6 @@ export class CreateDentistProfileDto
 
   @IsOptional()
   @IsString()
-  licenceUrl: string;
-
-  @IsOptional()
-  @IsString()
-  license: string;
-
-  @IsOptional()
-  @IsString()
   name: string;
 
   @IsOptional()
