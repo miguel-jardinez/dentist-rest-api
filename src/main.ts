@@ -15,14 +15,21 @@ async function bootstrap() {
     .setTitle('Common Dentist rest API')
     .setDescription('Api with dentist services')
     .setVersion('1.0')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'Bearer',
+    )
     .addTag('Dentist API')
     .build();
 
   app.setGlobalPrefix(API_VERSION);
   app.use(cookieParser());
 
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('/api', app, document);
+  const document = SwaggerModule.createDocument(app, swaggerConfig, {
+    ignoreGlobalPrefix: false,
+  });
+
+  SwaggerModule.setup('/api/docs', app, document, { useGlobalPrefix: true });
 
   app.useGlobalPipes(
     new ValidationPipe({

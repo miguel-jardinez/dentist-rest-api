@@ -6,9 +6,24 @@ import { CreateCustomerAddressDto } from '@features/customer_address/dto/create-
 import { RequestUserData } from '@utils/RequestUserData';
 
 export interface CustomerAddressControllerInterface {
-  createCustomerAddress: (request: RequestUserData, createCustomerAddressDto: CreateCustomerAddressDto) => Promise<ResponseApi<CustomerAddressEntity>>
-  getAllAddresses: (request: RequestUserData) => Promise<ResponseApi<Array<CustomerAddressEntity>>>;
-  getOnAddress: (request: RequestUserData, addressId: string) => Promise<ResponseApi<CustomerAddressEntity>>;
-  updateAddress: (request: RequestUserData, addressId: string, updateCustomerAddressDto: UpdateCustomerAddressDto) => Promise<ResponseApi<UpdateResult>>
-  deleteCustomerAddress: (request: RequestUserData, addressId: string) => Promise<ResponseApi<DeleteResult>>
+  createCustomerAddress: (
+    request: RequestUserData,
+    createCustomerAddressDto: CreateCustomerAddressDto,
+  ) => Promise<ResponseApi<CustomerAddressEntity>>;
+  getAllAddresses: (
+    request: RequestUserData,
+  ) => Promise<ResponseApi<Array<CustomerAddressEntity>>>;
+  getOneAddress: (
+    request: RequestUserData,
+    addressId: string,
+  ) => Promise<ResponseApi<CustomerAddressEntity>>;
+  updateAddress: (
+    request: RequestUserData,
+    addressId: string,
+    updateCustomerAddressDto: UpdateCustomerAddressDto,
+  ) => Promise<ResponseApi<UpdateResult>>;
+  deleteCustomerAddress: (
+    request: RequestUserData,
+    addressId: string,
+  ) => Promise<ResponseApi<DeleteResult>>;
 }

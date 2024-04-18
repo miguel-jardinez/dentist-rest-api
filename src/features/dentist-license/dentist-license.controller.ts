@@ -23,7 +23,10 @@ import { RolesAuth } from '@guards/roles/roles.decorator';
 import { UserRole } from '@utils/RoleEnum';
 import { RolesGuard } from '@guards/roles/roles.guard';
 import { GetLicenseDto } from '@features/dentist-license/dto/get-license.dto';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponseApi } from '@utils/ApiOkResponseApi';
 
+@ApiTags('Dentist License')
 @Controller('dentistLicense')
 @UseGuards(AuthGuard('jwt'))
 export class DentistLicenseController implements LicenseControllerInterface {
@@ -32,6 +35,8 @@ export class DentistLicenseController implements LicenseControllerInterface {
   @Post('createLicense')
   @RolesAuth(UserRole.DENTIST)
   @UseGuards(RolesGuard)
+  @ApiBody({ type: CreateLicenseDto })
+  @ApiOkResponseApi(DentistLicenseEntity)
   createLicense(
     @Request() request: RequestUserData,
     @Body() createLicense: CreateLicenseDto,
@@ -55,6 +60,7 @@ export class DentistLicenseController implements LicenseControllerInterface {
   @Post('getLicense')
   @RolesAuth(UserRole.DENTIST)
   @UseGuards(RolesGuard)
+  @ApiBody({ type: GetLicenseDto })
   getLicenseData(
     @Body() getLicenseDto: GetLicenseDto,
   ): Promise<ResponseApi<LicenseSepResponse>> {

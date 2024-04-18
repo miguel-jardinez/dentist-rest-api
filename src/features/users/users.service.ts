@@ -7,9 +7,9 @@ import { UserEntity } from '@features/users/entities/user.entity';
 import { CreateUserDto } from '@features/users/dto/create-user.dto';
 import { ResponseApi } from '@utils/ResponseApi';
 import { CustomerProfileService } from '@features/customer_profile/customerProfile.service';
-import { DentistProfileService } from '@features/dentist_profile/dentist_profile.service';
+import { DentistProfileService } from '@features/dentist-profile/dentist-profile.service';
 import { UserRole } from '@utils/RoleEnum';
-import { CreateDentistProfileDto } from '@features/dentist_profile/dto/create-dentist_profile.dto';
+import { CreateDentistProfileDto } from '@features/dentist-profile/dto/create-dentist-profile.dto';
 import { CreateProfileDto } from '@features/customer_profile/dto/create-profile.dto';
 
 @Injectable()
@@ -83,11 +83,7 @@ export class UsersService implements UserServiceInterface {
   async remove(id: string): Promise<ResponseApi<DeleteResult>> {
     try {
       const userDeleted = await this.userEntityRepository.delete({ id });
-      return new ResponseApi<DeleteResult>(
-        userDeleted,
-        true,
-        Date.now().toString(),
-      );
+      return new ResponseApi<DeleteResult>(userDeleted, true, Date());
     } catch (e: any) {
       this.errorService.errorHandling(e.code);
     }

@@ -37,7 +37,9 @@ export class CustomerProfileService implements CustomerProfileEntityInterface {
     profileId: string,
   ): Promise<ResponseApi<CustomerProfileEntity>> {
     try {
-      const profile = await this.profileRepository.findOneByOrFail({ id: profileId });
+      const profile = await this.profileRepository.findOneByOrFail({
+        id: profileId,
+      });
       return new ResponseApi(profile, true, Date());
     } catch (e: any) {
       this.errorService.errorHandling(e.code);

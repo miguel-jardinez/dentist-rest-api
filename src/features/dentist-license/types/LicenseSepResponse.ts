@@ -1,7 +1,6 @@
 export interface LicenseSepResponse {
-  items: Array<LicenseSepResponseItem>
+  items: Array<LicenseSepResponseItem>;
 }
-
 
 interface LicenseSepResponseItem {
   anioreg: number;

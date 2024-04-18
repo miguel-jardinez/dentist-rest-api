@@ -1,15 +1,32 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CustomerPersonalClinicHistoryService } from './customerPersonalClinicHistory.service';
 import { CreateCustomerPersonalClinicHistoryDto } from './dto/create-customer_personal_clinic_history.dto';
 import { UpdateCustomerPersonalClinicHistoryDto } from './dto/update-customer_personal_clinic_history.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Customer Personal Clinic History')
 @Controller('customer-personal-clinic-history')
 export class CustomerPersonalClinicHistoryController {
-  constructor(private readonly customerPersonalClinicHistoryService: CustomerPersonalClinicHistoryService) {}
+  constructor(
+    private readonly customerPersonalClinicHistoryService: CustomerPersonalClinicHistoryService,
+  ) {}
 
   @Post()
-  create(@Body() createCustomerPersonalClinicHistoryDto: CreateCustomerPersonalClinicHistoryDto) {
-    return this.customerPersonalClinicHistoryService.create(createCustomerPersonalClinicHistoryDto);
+  create(
+    @Body()
+    createCustomerPersonalClinicHistoryDto: CreateCustomerPersonalClinicHistoryDto,
+  ) {
+    return this.customerPersonalClinicHistoryService.create(
+      createCustomerPersonalClinicHistoryDto,
+    );
   }
 
   @Get()
@@ -23,8 +40,15 @@ export class CustomerPersonalClinicHistoryController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCustomerPersonalClinicHistoryDto: UpdateCustomerPersonalClinicHistoryDto) {
-    return this.customerPersonalClinicHistoryService.update(+id, updateCustomerPersonalClinicHistoryDto);
+  update(
+    @Param('id') id: string,
+    @Body()
+    updateCustomerPersonalClinicHistoryDto: UpdateCustomerPersonalClinicHistoryDto,
+  ) {
+    return this.customerPersonalClinicHistoryService.update(
+      +id,
+      updateCustomerPersonalClinicHistoryDto,
+    );
   }
 
   @Delete(':id')

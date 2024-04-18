@@ -7,14 +7,18 @@ import {
 } from '@mapbox/search-js-core';
 import { MapBoxServiceRepositoryInterface } from '@features/map-box/repository/MapBoxServiceRepository.interface';
 import { ResponseApi } from '@utils/ResponseApi';
-import { EnvConfigService } from '../../core/env-config/env-config.service';
+import { EnvConfigService } from '@core/env-config/env-config.service';
+import { ErrorService } from '@utils/ErrorService';
 
 @Injectable()
 export class MapBoxService implements MapBoxServiceRepositoryInterface {
   private readonly autofillClient: AddressAutofillCore;
   private readonly autofillSessionClient: SessionToken;
 
-  constructor(private readonly envConfigService: EnvConfigService) {
+  constructor(
+    private readonly envConfigService: EnvConfigService,
+    private readonly errorService: ErrorService,
+  ) {
     this.autofillClient = new AddressAutofillCore({
       accessToken: this.envConfigService.getString('MAP_BOX_TOKEN'),
     });
@@ -35,7 +39,7 @@ export class MapBoxService implements MapBoxServiceRepositoryInterface {
       return new ResponseApi(response.suggestions, true, Date());
     } catch (e: any) {
       console.log(e);
-      // this.errorService.errorHandling(e.code, e.message);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 
@@ -50,6 +54,7 @@ export class MapBoxService implements MapBoxServiceRepositoryInterface {
       return new ResponseApi(response.features, true, Date());
     } catch (e: any) {
       console.log(e);
+      this.errorService.errorHandling(e.code, e.message);
     }
   }
 }

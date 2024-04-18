@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { ErrorService } from '@utils/ErrorService';
 import { CustomerProfileModule } from '@features/customer_profile/customerProfile.module';
-import { DentistProfileModule } from '@features/dentist_profile/dentist_profile.module';
+import { DentistProfileModule } from '@features/dentist-profile/dentist-profile.module';
 
 @Module({
   imports: [

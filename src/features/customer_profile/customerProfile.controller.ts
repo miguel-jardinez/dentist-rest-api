@@ -16,7 +16,10 @@ import { RequestUserData } from '@utils/RequestUserData';
 import { ResponseApi } from '@utils/ResponseApi';
 import { CustomerProfileEntity } from '@features/customer_profile/entities/customerProfile.entity';
 import { UpdateResult } from 'typeorm';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponseApi } from '@utils/ApiOkResponseApi';
 
+@ApiTags('Customer Profile')
 @Controller('customerProfile')
 @UseGuards(AuthGuard('jwt'))
 export class CustomerProfileController
@@ -26,6 +29,7 @@ export class CustomerProfileController
 
   @Get()
   @RolesAuth(UserRole.CUSTOMER)
+  @ApiOkResponseApi(CustomerProfileEntity)
   findCustomerProfile(
     @Request() request: RequestUserData,
   ): Promise<ResponseApi<CustomerProfileEntity>> {
@@ -34,6 +38,7 @@ export class CustomerProfileController
 
   @Patch()
   @RolesAuth(UserRole.CUSTOMER)
+  @ApiBody({ type: UpdateProfileDto })
   updateCustomerProfile(
     @Request() request: RequestUserData,
     @Body() updateCustomerProfile: UpdateProfileDto,

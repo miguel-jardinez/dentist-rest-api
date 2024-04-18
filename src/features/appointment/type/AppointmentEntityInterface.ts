@@ -1,15 +1,13 @@
-import { DentistProfileEntity } from '@features/dentist_profile/entities/dentist_profile.entity';
+import { DentistProfileEntity } from '@features/dentist-profile/entities/dentist_profile.entity';
 import { CustomerProfileEntity } from '@features/customer_profile/entities/customerProfile.entity';
-import { VitalSignEntity } from '@features/vital_signs/entities/vital_sign.entity';
-import { PaymentMethodEntity } from '@features/payment_methods/entities/payment_method.entity';
-import { EstablishmentAddressEntity } from '@features/establishment_address/entities/establishment_address.entity';
+import { AppointmentVitalSignEntity } from '@features/appointment-vital-signs/entities/appointment-vital-sign.entity';
 
 export interface AppointmentEntityInterface {
   id?: string;
   appointmentName: string;
-  // dentist: DentistProfileEntity;
-  // customer: CustomerProfileEntity;
-  vitalSigns: VitalSignEntity;
+  dentist: DentistProfileEntity;
+  customer: CustomerProfileEntity;
+  vitalSigns: AppointmentVitalSignEntity;
   // paymentMethod: PaymentMethodEntity;
   // establishment: EstablishmentAddressEntity;
   amount: number;

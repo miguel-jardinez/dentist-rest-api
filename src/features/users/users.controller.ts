@@ -14,7 +14,9 @@ import { UserEntity } from '@features/users/entities/user.entity';
 import { UsersService } from '@features/users/users.service';
 import { ResponseApi } from '@utils/ResponseApi';
 import { DeleteResult } from 'typeorm';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Dentist ')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UsersController implements UserControllerInterface {

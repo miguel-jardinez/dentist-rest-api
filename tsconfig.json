@@ -23,6 +23,7 @@
       "@guards/*" : ["guards/*"],
       "@utils/*" : ["utils/*"],
       "@core/*" : ["core/*"],
+      "@seeder/*" : ["seeder/*"],
       "@app/*" : ["src/*"],
     }
   }

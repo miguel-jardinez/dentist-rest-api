@@ -1,13 +1,14 @@
 import { WorkingScheduleEntityInterface } from '@features/working_schedule/type/WorkingScheduleEntityInterface';
-import { EstablishmentAddressEntity } from '@features/establishment_address/entities/establishment_address.entity';
+import { EstablishmentAddressEntity } from '@features/dentist-establishment-address/entities/establishment_address.entity';
 import {
   Column,
   CreateDateColumn,
-  Entity,
+  Entity, JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { DentistEstablishmentEntity } from '@features/dentist-establishment/entities/dentist-establishment.entity';
 
 @Entity('working_schedule')
 export class WorkingScheduleEntity implements WorkingScheduleEntityInterface {
@@ -23,11 +24,13 @@ export class WorkingScheduleEntity implements WorkingScheduleEntityInterface {
   @Column('text')
   endWork: string;
 
-  // @ManyToOne(
-  //   () => EstablishmentAddressEntity,
-  //   (establishmentAddressEntity) => establishmentAddressEntity.workingSchedule,
-  // )
-  // establishment: EstablishmentAddressEntity;
+  @ManyToOne(
+    () => DentistEstablishmentEntity,
+    (dentistEstablishmentEntity) => dentistEstablishmentEntity.workingSchedule,
+    { onDelete: 'CASCADE' }
+  )
+  @JoinColumn({ name: 'establishment_id' })
+  establishment: DentistEstablishmentEntity;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;

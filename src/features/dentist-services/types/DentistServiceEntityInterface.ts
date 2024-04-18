@@ -1,4 +1,4 @@
-import { EstablishmentAddressEntity } from '@features/establishment_address/entities/establishment_address.entity';
+import { EstablishmentAddressEntity } from '@features/dentist-establishment-address/entities/establishment_address.entity';
 
 export interface DentistServiceEntityInterface {
   id?: string;

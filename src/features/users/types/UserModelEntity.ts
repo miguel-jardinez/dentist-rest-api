@@ -1,5 +1,5 @@
 import { UserRole } from '@utils/RoleEnum';
-import { DentistProfileEntity } from '@features/dentist_profile/entities/dentist_profile.entity';
+import { DentistProfileEntity } from '@features/dentist-profile/entities/dentist_profile.entity';
 import { CustomerProfileEntity } from '@features/customer_profile/entities/customerProfile.entity';
 
 export interface UserModelEntity {

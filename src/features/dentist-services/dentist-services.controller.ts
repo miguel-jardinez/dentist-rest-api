@@ -16,7 +16,9 @@ import { UserRole } from '../../utils/RoleEnum';
 import { RolesAuth } from '../../guards/roles/roles.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../guards/roles/roles.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Dentist Services')
 @Controller('dentists-services')
 @UseGuards(AuthGuard('jwt'))
 export class DentistServicesController {

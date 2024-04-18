@@ -53,6 +53,7 @@ export class CustomerAddressService implements CustomerAddressServiceInterface {
     try {
       const addressEntity = await this.customerAddressRepository.find({
         where: { customer: { id: profileId } },
+        relations: { state: true },
       });
       return new ResponseApi(addressEntity, true, Date());
     } catch (e: any) {
@@ -67,6 +68,7 @@ export class CustomerAddressService implements CustomerAddressServiceInterface {
     try {
       const addressEntity = await this.customerAddressRepository.findOne({
         where: { id: addressId, customer: { id: profileId } },
+        relations: { state: true },
       });
       return new ResponseApi(addressEntity, true, Date());
     } catch (e: any) {
@@ -82,8 +84,12 @@ export class CustomerAddressService implements CustomerAddressServiceInterface {
     try {
       const addressEntity = await this.customerAddressRepository.update(
         { id: addressId, customer: { id: profileId } },
-        updateCustomerAddressDto,
+        {
+          ...updateCustomerAddressDto,
+          state: { id: updateCustomerAddressDto.state.id },
+        },
       );
+
       return new ResponseApi(addressEntity, true, Date());
     } catch (e: any) {
       this.errorService.errorHandling(e.code, e.message);

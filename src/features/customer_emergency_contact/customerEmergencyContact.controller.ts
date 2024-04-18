@@ -20,9 +20,12 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { RolesAuth } from '@guards/roles/roles.decorator';
 import { UserRole } from '@utils/RoleEnum';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBody, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponseApi } from '@utils/ApiOkResponseApi';
 
-@Controller('customerEmergencyContact')
 @UseGuards(AuthGuard('jwt'))
+@ApiTags('Customer Emergency Contact')
+@Controller('customerEmergencyContact')
 export class CustomerEmergencyContactController
   implements CustomerEmergencyContactControllerInterface
 {
@@ -31,6 +34,8 @@ export class CustomerEmergencyContactController
   ) {}
 
   @Post()
+  @ApiBody({ type: CreateCustomerEmergencyContactDto })
+  @ApiOkResponseApi(CustomerEmergencyContactEntity)
   @RolesAuth(UserRole.CUSTOMER)
   createCustomerEmergencyContact(
     @Request() request: RequestUserData,
