@@ -51,7 +51,7 @@ export class DentistProfileService implements DentistProfileEntityDtoInterface {
     try {
       const profile = await this.dentistRepository.findOne({
         where: { id },
-        relations: { user: true },
+        relations: { user: true, establishment: { address: true } },
       });
       return new ResponseApi(profile, true, Date());
     } catch (e: any) {

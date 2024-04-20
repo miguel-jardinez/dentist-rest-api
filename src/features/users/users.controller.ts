@@ -14,7 +14,8 @@ import { UserEntity } from '@features/users/entities/user.entity';
 import { UsersService } from '@features/users/users.service';
 import { ResponseApi } from '@utils/ResponseApi';
 import { DeleteResult } from 'typeorm';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponseApi } from '@utils/ApiOkResponseApi';
 
 @ApiTags('Dentist ')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -23,6 +24,8 @@ export class UsersController implements UserControllerInterface {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @ApiBody({ type: CreateUserDto })
+  @ApiOkResponseApi(UserEntity)
   createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<ResponseApi<UserEntity>> {
@@ -39,7 +42,7 @@ export class UsersController implements UserControllerInterface {
     return this.usersService.findById(id);
   }
 
-  @Delete()
+  @Delete(':id')
   removeUser(@Param('id') id: string): Promise<ResponseApi<DeleteResult>> {
     return this.usersService.remove(id);
   }

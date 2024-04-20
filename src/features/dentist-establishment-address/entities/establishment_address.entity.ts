@@ -57,8 +57,11 @@ export class EstablishmentAddressEntity
   @ApiProperty({ name: 'coordinates', type: Array<number>, default: [0, 0] })
   coordinates: Array<number>;
 
-  @OneToOne(() => DentistEstablishmentEntity, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'establishment_id' })
+  @OneToOne(() => DentistEstablishmentEntity, {
+    onDelete: 'CASCADE',
+    cascade: ['insert', 'update'],
+    nullable: true,
+  })
   establishment: DentistEstablishmentEntity;
 
   @CreateDateColumn({ name: 'created_at' })

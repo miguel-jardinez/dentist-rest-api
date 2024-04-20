@@ -1,5 +1,4 @@
 import { DentistEstablishmentEntityInterface } from '@features/dentist-establishment/repository/dentistEstablishmentEntity.interface';
-import { EstablishmentAddressEntity } from '@features/dentist-establishment-address/entities/establishment_address.entity';
 import { AppointmentEntity } from '@features/appointment/entities/appointment.entity';
 import { DentistProfileEntity } from '@features/dentist-profile/entities/dentist_profile.entity';
 import { DentistServiceEntity } from '@features/dentist-services/entities/dentist-service.entity';
@@ -16,6 +15,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { EstablishmentAddressEntity } from '@features/dentist-establishment-address/entities/establishment_address.entity';
 
 @Entity('dentist_establishment')
 export class DentistEstablishmentEntity
@@ -37,8 +37,12 @@ export class DentistEstablishmentEntity
   @ApiProperty({ name: 'phone_number' })
   phoneNumber: string;
 
-  @OneToOne(() => EstablishmentAddressEntity, { nullable: true })
   @ApiProperty({ type: EstablishmentAddressEntity })
+  @OneToOne(() => EstablishmentAddressEntity, {
+    nullable: true,
+    cascade: ['insert', 'update'],
+  })
+  @JoinColumn({ name: 'address_id' })
   address?: EstablishmentAddressEntity;
 
   @OneToMany(
@@ -54,7 +58,6 @@ export class DentistEstablishmentEntity
     { nullable: true },
   )
   @JoinColumn({ name: 'dentist_id' })
-  // @ApiProperty({ type: DentistProfileEntity })
   dentist?: DentistProfileEntity;
 
   @OneToMany(
@@ -62,7 +65,6 @@ export class DentistEstablishmentEntity
     (dentistServiceEntity) => dentistServiceEntity.establishment,
     { nullable: true },
   )
-  // @ApiProperty({ type: DentistServiceEntity })
   services?: DentistServiceEntity;
 
   @OneToMany(

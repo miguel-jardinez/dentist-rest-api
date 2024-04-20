@@ -61,7 +61,8 @@ export class DentistEstablishmentService
     try {
       const establishmentEntities = await this.dentistEstablishmentEntity.find({
         where: { dentist: { id: dentistProfileId } },
-        relations: { address: true },
+        relations: { dentist: true, address: true },
+        relationLoadStrategy: 'query',
       });
 
       return new ResponseApi(establishmentEntities, true, Date());
@@ -79,7 +80,6 @@ export class DentistEstablishmentService
       const establishmentEntity = await this.dentistEstablishmentEntity.findOne(
         {
           where: { id: establishmentId, dentist: { id: dentistProfileId } },
-          relations: { address: true },
         },
       );
 

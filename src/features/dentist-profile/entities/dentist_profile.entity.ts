@@ -53,7 +53,6 @@ export class DentistProfileEntity implements DentistProfileEntityInterface {
     nullable: true,
     onDelete: 'CASCADE',
   })
-  @ApiProperty({ type: UserEntity })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
