@@ -1,4 +1,6 @@
-import { EstablishmentAddressEntityInterface } from '@features/dentist-establishment-address/type/EstablishmentAddressEntityInterface';
+import {
+  EstablishmentAddressEntityInterface,
+} from '@features/dentist-establishment-address/type/EstablishmentAddressEntityInterface';
 import {
   Column,
   CreateDateColumn,
@@ -20,11 +22,11 @@ export class EstablishmentAddressEntity
   @ApiProperty()
   id: string;
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   @ApiProperty()
   city: string;
 
-  @Column('varchar', { name: 'full_address' })
+  @Column('varchar', { name: 'full_address', nullable: true })
   @ApiProperty({ name: 'full_address' })
   fullAddress: string;
 
@@ -32,36 +34,37 @@ export class EstablishmentAddressEntity
   @ApiProperty({ name: 'interior_number' })
   interiorNumber?: number;
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   @ApiProperty()
   neighborhood: string;
 
-  @OneToOne(() => StatesEntity)
+  @OneToOne(() => StatesEntity, { nullable: true })
   @JoinColumn({ name: 'state_id' })
   @ApiProperty()
   state: StatesEntity;
 
-  @Column('varchar', { name: 'street_name' })
+  @Column('varchar', { name: 'street_name', nullable: true })
   @ApiProperty({ name: 'street_name' })
   streetName: string;
 
-  @Column('varchar', { name: 'street_number' })
+  @Column('varchar', { name: 'street_number', nullable: true })
   @ApiProperty({ name: 'street_number' })
   streetNumber: number;
 
-  @Column('varchar', { name: 'zip_code' })
+  @Column('varchar', { name: 'zip_code', nullable: true })
   @ApiProperty({ name: 'zip_code' })
   zipCode: number;
 
-  @Column('point')
+  @Column('point', { nullable: true })
   @ApiProperty({ name: 'coordinates', type: Array<number>, default: [0, 0] })
-  coordinates: Array<number>;
+  coordinates: string;
 
-  @OneToOne(() => DentistEstablishmentEntity, {
-    onDelete: 'CASCADE',
-    cascade: ['insert', 'update'],
-    nullable: true,
-  })
+  @OneToOne(
+    () => DentistEstablishmentEntity,
+    (dentistEstablishmentEntity) => dentistEstablishmentEntity.address,
+    { nullable: true, onDelete: 'CASCADE' },
+  )
+  @JoinColumn({ name: 'establishment_id' })
   establishment: DentistEstablishmentEntity;
 
   @CreateDateColumn({ name: 'created_at' })

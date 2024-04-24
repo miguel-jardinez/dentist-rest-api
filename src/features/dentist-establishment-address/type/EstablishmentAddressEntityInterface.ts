@@ -11,8 +11,8 @@ export interface EstablishmentAddressEntityInterface {
   zipCode: number;
   fullAddress: string;
   city: string;
-  coordinates: Array<number>;
-  establishment: DentistEstablishmentEntity;
+  coordinates: string;
+  establishment?: DentistEstablishmentEntity;
   createdAt: string;
   updatedAt: string;
 }

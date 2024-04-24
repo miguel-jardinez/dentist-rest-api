@@ -22,16 +22,6 @@ import { ApiOkResponseApi } from '@utils/ApiOkResponseApi';
 @Controller('users')
 export class UsersController implements UserControllerInterface {
   constructor(private readonly usersService: UsersService) {}
-
-  @Post()
-  @ApiBody({ type: CreateUserDto })
-  @ApiOkResponseApi(UserEntity)
-  createUser(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<ResponseApi<UserEntity>> {
-    return this.usersService.create(createUserDto);
-  }
-
   @Get()
   findAllUsers(): Promise<ResponseApi<UserEntity[]>> {
     return this.usersService.findAll();

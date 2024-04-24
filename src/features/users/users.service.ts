@@ -24,7 +24,9 @@ export class UsersService implements UserServiceInterface {
 
   async create(createUserDto: CreateUserDto): Promise<ResponseApi<UserEntity>> {
     try {
-      const user = this.userEntityRepository.create(createUserDto);
+      const user = this.userEntityRepository.create({
+        ...createUserDto,
+      });
       const userEntity = await this.userEntityRepository.save(user);
 
       if (user.role === UserRole.DENTIST) {
@@ -52,7 +54,9 @@ export class UsersService implements UserServiceInterface {
 
   async findAll(): Promise<ResponseApi<UserEntity[]>> {
     try {
-      const users = await this.userEntityRepository.find();
+      const users = await this.userEntityRepository.find({
+        relations: { dentistProfile: true, customerProfile: true },
+      });
       return new ResponseApi<UserEntity[]>(users, true, Date());
     } catch (e: any) {
       this.errorService.errorHandling(e.code);

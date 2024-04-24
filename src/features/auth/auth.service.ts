@@ -7,6 +7,8 @@ import { CreateUserDto } from '@features/users/dto/create-user.dto';
 import { UserEntity } from '@features/users/entities/user.entity';
 import { UserRole } from '@utils/RoleEnum';
 import { ResponseApi } from '@utils/ResponseApi';
+import { CognitoService } from '../../aws/cognito/cognito.service';
+import { AwsRegisterDto } from '../../aws/cognito/dto/aws.register.dto';
 
 @Injectable()
 export class AuthService {
@@ -14,10 +16,16 @@ export class AuthService {
     private readonly userService: UsersService,
     private readonly errorService: ErrorService,
     private readonly jwtService: JwtService,
+    private readonly awsCognitoService: CognitoService,
   ) {}
 
-  public register(registerAuthDto: CreateUserDto) {
-    return this.userService.create(registerAuthDto);
+  public async register(registerAuthDto: CreateUserDto) {
+    try {
+      return this.userService.create(registerAuthDto);
+    } catch (e: any) {
+      console.log(e);
+      this.errorService.errorHandling(e.code, e.message);
+    }
   }
 
   public async validateUserCredentials(

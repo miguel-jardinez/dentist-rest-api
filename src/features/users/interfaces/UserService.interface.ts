@@ -4,7 +4,10 @@ import { ResponseApi } from '@utils/ResponseApi';
 import { DeleteResult } from 'typeorm';
 
 export interface UserServiceInterface {
-  create: (createUserDto: CreateUserDto) => Promise<ResponseApi<UserEntity>>;
+  create: (
+    createUserDto: CreateUserDto,
+    cognitoId: string,
+  ) => Promise<ResponseApi<UserEntity>>;
   findAll: () => Promise<ResponseApi<UserEntity[]>>;
   findById: (id: string) => Promise<ResponseApi<UserEntity>>;
   remove: (id: string) => Promise<ResponseApi<DeleteResult>>;

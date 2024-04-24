@@ -7,6 +7,7 @@ import { DentistEstablishmentEntity } from '@features/dentist-establishment/enti
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorService } from '@utils/ErrorService';
+import { EstablishmentAddressEntity } from '@features/dentist-establishment-address/entities/establishment_address.entity';
 
 @Injectable()
 export class DentistEstablishmentService
@@ -61,8 +62,7 @@ export class DentistEstablishmentService
     try {
       const establishmentEntities = await this.dentistEstablishmentEntity.find({
         where: { dentist: { id: dentistProfileId } },
-        relations: { dentist: true, address: true },
-        relationLoadStrategy: 'query',
+        relations: { dentist: true, address: { state: true } },
       });
 
       return new ResponseApi(establishmentEntities, true, Date());
@@ -80,6 +80,7 @@ export class DentistEstablishmentService
       const establishmentEntity = await this.dentistEstablishmentEntity.findOne(
         {
           where: { id: establishmentId, dentist: { id: dentistProfileId } },
+          relations: { dentist: true, address: true },
         },
       );
 

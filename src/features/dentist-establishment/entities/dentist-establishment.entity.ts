@@ -38,11 +38,11 @@ export class DentistEstablishmentEntity
   phoneNumber: string;
 
   @ApiProperty({ type: EstablishmentAddressEntity })
-  @OneToOne(() => EstablishmentAddressEntity, {
-    nullable: true,
-    cascade: ['insert', 'update'],
-  })
-  @JoinColumn({ name: 'address_id' })
+  @OneToOne(
+    () => EstablishmentAddressEntity,
+    (establishmentAddressEntity) => establishmentAddressEntity.establishment,
+    { nullable: true },
+  )
   address?: EstablishmentAddressEntity;
 
   @OneToMany(
@@ -55,7 +55,7 @@ export class DentistEstablishmentEntity
   @ManyToOne(
     () => DentistProfileEntity,
     (dentistProfileEntity) => dentistProfileEntity.establishment,
-    { nullable: true },
+    { nullable: true, onDelete: 'CASCADE' },
   )
   @JoinColumn({ name: 'dentist_id' })
   dentist?: DentistProfileEntity;

@@ -22,6 +22,9 @@ import { DentistEstablishmentModule } from '@features/dentist-establishment/dent
 import { StatesModule } from '@seeder/states/states.module';
 import { AppointmentVitalSignsModule } from '@features/appointment-vital-signs/appointment-vital-signs.module';
 import { SpecialtiesModule } from '@seeder/specialties/specialties.module';
+import { CognitoService } from './aws/cognito/cognito.service';
+import { S3Service } from './aws/s3/s3.service';
+import { SecretHashService } from './aws/secret-hash/secret-hash.service';
 
 @Module({
   imports: [
@@ -55,6 +58,6 @@ import { SpecialtiesModule } from '@seeder/specialties/specialties.module';
     AppointmentVitalSignsModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [CognitoService, S3Service, SecretHashService],
 })
 export class AppModule {}
