@@ -7,27 +7,16 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { DentistServiceEntityInterface } from '@features/dentist-services/types/DentistServiceEntityInterface';
+
 import { DentistEstablishmentEntity } from '@features/dentist-establishment/entities/dentist-establishment.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { DentistServiceEntityInterface } from '@features/dentist-services/repository/dentist-service.entity.interface';
 
 @Entity('dentist_service')
 export class DentistServiceEntity implements DentistServiceEntityInterface {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   id: string;
-
-  @Column('double precision')
-  @ApiProperty()
-  amount: number;
-
-  @Column('text', { name: 'average_time' })
-  @ApiProperty({ name: 'average_time' })
-  averageTime: string;
-
-  @Column({ name: 'currency_code', type: 'varchar', length: 3 })
-  @ApiProperty({ name: 'currency_code' })
-  currencyCode: string;
 
   @Column('text')
   @ApiProperty()

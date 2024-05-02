@@ -1,6 +1,4 @@
-import { CreateAmountDto } from '../amount/create-amount.dto';
-import { IsNotEmptyObject, IsString, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString } from 'class-validator';
 
 export class CreateDentistServiceDto {
   @IsString()
@@ -8,9 +6,4 @@ export class CreateDentistServiceDto {
 
   @IsString()
   description: string;
-
-  @IsNotEmptyObject()
-  @ValidateNested({ each: true })
-  @Type(() => CreateAmountDto)
-  amount: CreateAmountDto;
 }
