@@ -25,6 +25,7 @@ import { SpecialtiesModule } from '@seeder/specialties/specialties.module';
 import { CognitoService } from './aws/cognito/cognito.service';
 import { S3Service } from './aws/s3/s3.service';
 import { SecretHashService } from './aws/secret-hash/secret-hash.service';
+import { TeethModule } from '@seeder/teeths/teeth.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { SecretHashService } from './aws/secret-hash/secret-hash.service';
     StatesModule,
     SpecialtiesModule,
     AppointmentVitalSignsModule,
+    TeethModule,
   ],
   controllers: [],
   providers: [CognitoService, S3Service, SecretHashService],
