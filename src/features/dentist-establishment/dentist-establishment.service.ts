@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDentistEstablishmentDto } from './dto/create-dentist-establishment.dto';
 import { UpdateDentistEstablishmentDto } from './dto/update-dentist-establishment.dto';
-import { DentistEstablishmentServiceInterface } from '@features/dentist-establishment/repository/dentistEstablishmentService.interface';
+import {
+  DentistEstablishmentServiceInterface,
+} from '@features/dentist-establishment/repository/dentistEstablishmentService.interface';
 import { ResponseApi } from '@utils/ResponseApi';
 import { DentistEstablishmentEntity } from '@features/dentist-establishment/entities/dentist-establishment.entity';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorService } from '@utils/ErrorService';
-import { EstablishmentAddressEntity } from '@features/dentist-establishment-address/entities/establishment_address.entity';
+import { WorkingScheduleService } from '@features/working_schedule/working_schedule.service';
 
 @Injectable()
 export class DentistEstablishmentService
@@ -17,6 +19,7 @@ export class DentistEstablishmentService
     @InjectRepository(DentistEstablishmentEntity)
     private readonly dentistEstablishmentEntity: Repository<DentistEstablishmentEntity>,
     private readonly errorService: ErrorService,
+    private readonly workingScheduleService: WorkingScheduleService
   ) {}
 
   async createDentistEstablishment(
@@ -31,6 +34,8 @@ export class DentistEstablishmentService
       const establishmentEntity = await this.dentistEstablishmentEntity.save(
         establishment,
       );
+
+      await this.workingScheduleService.createWorkingSchedule(establishmentEntity.id)
 
       return new ResponseApi(establishmentEntity, true, Date());
     } catch (e: any) {
@@ -62,7 +67,7 @@ export class DentistEstablishmentService
     try {
       const establishmentEntities = await this.dentistEstablishmentEntity.find({
         where: { dentist: { id: dentistProfileId } },
-        relations: { dentist: true, address: { state: true } },
+        relations: { dentist: true, address: { state: true }, workingSchedule: true },
       });
 
       return new ResponseApi(establishmentEntities, true, Date());
@@ -79,7 +84,7 @@ export class DentistEstablishmentService
     try {
       const establishmentEntity = await this.dentistEstablishmentEntity.findOne(
         {
-          where: { id: establishmentId, dentist: { id: dentistProfileId } },
+          where: { id: establishmentId, dentist: { id: dentistProfileId }, workingSchedule: true },
           relations: { dentist: true, address: true },
         },
       );

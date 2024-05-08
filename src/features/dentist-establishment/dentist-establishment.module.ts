@@ -4,9 +4,10 @@ import { DentistEstablishmentController } from './dentist-establishment.controll
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ErrorService } from '@utils/ErrorService';
 import { DentistEstablishmentEntity } from '@features/dentist-establishment/entities/dentist-establishment.entity';
+import { WorkingScheduleModule } from '@features/working_schedule/working_schedule.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DentistEstablishmentEntity])],
+  imports: [TypeOrmModule.forFeature([DentistEstablishmentEntity]), WorkingScheduleModule],
   controllers: [DentistEstablishmentController],
   providers: [DentistEstablishmentService, ErrorService],
   exports: [DentistEstablishmentService],

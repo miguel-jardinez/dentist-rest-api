@@ -1,28 +1,38 @@
 import { WorkingScheduleEntityInterface } from '@features/working_schedule/type/WorkingScheduleEntityInterface';
-import { EstablishmentAddressEntity } from '@features/dentist-establishment-address/entities/establishment_address.entity';
 import {
   Column,
   CreateDateColumn,
-  Entity, JoinColumn,
+  Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { DentistEstablishmentEntity } from '@features/dentist-establishment/entities/dentist-establishment.entity';
+import { DaysOfWeek } from '@features/working_schedule/utils/DaysOfWeek';
 
 @Entity('working_schedule')
 export class WorkingScheduleEntity implements WorkingScheduleEntityInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('text')
+  @Column({
+    type: 'time',
+    default: () => "'00:00'",
+  })
   beginningWork: string;
 
-  @Column('varchar')
-  day: string;
+  @Column('enum', { default: DaysOfWeek.SUNDAY, enum: DaysOfWeek })
+  day: DaysOfWeek;
 
-  @Column('text')
+  @Column({
+    type: 'time',
+    default: () => "'00:00'",
+  })
   endWork: string;
+
+  @Column('boolean')
+  enabledToWork: boolean;
 
   @ManyToOne(
     () => DentistEstablishmentEntity,
